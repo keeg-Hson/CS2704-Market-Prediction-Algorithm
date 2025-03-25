@@ -1,2 +1,5 @@
 # CS2704-Market-Prediction-Algorithm
-A project for my CS2704 course. In theory, this will pose as a machine learning model that will extract live stock valuation figures (in this case, live S&amp;P500 valuations) with use of the Alpha Vantage API into a recursive dataset that will self correct in real time via our self learning ML model.. 
+
+A project for my CS2704 course. This intends to function as a self learning ML model that extracts live S&P500 valuations (with use of Alpha Vantage API) as a means of predicting future outcomes based off of historical and present data metrics.
+
+
