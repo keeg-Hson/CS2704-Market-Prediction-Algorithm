@@ -13,9 +13,14 @@ import time #PAUSE/TIMIING PROTOCOL: NECESSARY FOR LIVE VALUATIONS
 import cron #COULD USE 'SCHEDULE': FOR AUTOMATING DAILY PIPELINE EXECUTION
 import numpy as np #ENHANCED NUMERICAL HANDLING
 import matplotlib.pyplot as plt #GRAPH STATS
-import sklearn #ML MODEL TRAINING EVALUATING ACCURACY; *RANDOM FOREST TRAINING MODEL* IS TO BE UTILIZED HERE
+import sklearn.ensemble #ML MODEL TRAINING EVALUATING ACCURACY
+import sklearn.model_selection
+from sklearn.metrics import classification_report, accuracy_score
+import train_test_split
+import RandomForestClassifier #ML MODEL (ADDITIONAL)
 import seaborn as sns #DATA VISUALIZATION
 import joblib #SAVE/LOAD MODEL, GIVE USER CAPABILITY TO RUN ACROSS VARIOUS SESSIONS USING PRESET METRICS
+import os #FILE MANAGEMENT
  
 
 
@@ -25,11 +30,33 @@ import joblib #SAVE/LOAD MODEL, GIVE USER CAPABILITY TO RUN ACROSS VARIOUS SESSI
 #CRITERIA/FUNCTIONAL COMPONENTS
 #1. DATA INGESTION
 #-DOWNLOAD DAILY/LIVE STOCK VALUATION FIGURES. TO BE ACCOMLISHED VIA. USE OF DAILY OHLCV FROM ALPHA VANTAGE
-
-#--SCHEDULE DAILY JOB (VIA CRON LIBRARY)
-#--FETCHING OF LATEST SPY DATA (VIA ALPHA VANTAGE API):
+#--SCHEDULE DAILY JOB (VIA SCHEDULE)
+#--FETCHING OF LATEST SPY DATA (VIA ALPHA VANTAGE API): *COMPLETED*
 #---THIS IS TO FETCH CURRENT MARKET VALUATION VARIABLES, DAILY ADJUSTED OHLCV VALUATIONS 
 #----VIA USE OF ***TIME_SERIES_DAILY_ADJUSTED*** ENDPOINT, RETURNING OHLCV VALUATIONS FROM AV API
+def fetch_ohlcv(symbol="SPY", interval='1min', outputsize='full', api_key=None):
+    
+    #Fetch daily OHLCV data from Alpha Vantage API
+    print('Fetching OHLCV data valuations...')
+    url=f"" #INPUT URL HERE WHEN RETRIEVED
+    params = {
+        "function": "TIME_SERIES_INTRADAY",
+        "symbol": symbol,
+        "interval": interval,
+        "apikey": api_key,
+        "outputsize": outputsize,
+        "datatype": "json"
+    }
+
+    response=requests.get(url,params=params)
+    data=response.json()
+
+    if "Time Series" not in data:
+        print("ERROR: Invalid API repsonse/limit exceeded")
+        return None
+
+    #TBD: SET UP T_S_D_E , ENDPOINT CONFIGURATION
+    
 
 
 #2. FEATURE ENGINEERING
