@@ -13,10 +13,9 @@ import time #PAUSE/TIMIING PROTOCOL: NECESSARY FOR LIVE VALUATIONS
 import numpy as np #ENHANCED NUMERICAL HANDLING
 import matplotlib.pyplot as plt #GRAPH STATS
 import sklearn.ensemble #ML MODEL TRAINING EVALUATING ACCURACY
-import sklearn.model_selection
+from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, accuracy_score
-import train_test_split
-import RandomForestClassifier #ML MODEL (ADDITIONAL)
+from sklearn.ensemble import RandomForestClassifier #ML MODEL (ADDITIONAL)
 import seaborn as sns #DATA VISUALIZATION
 import joblib #SAVE/LOAD MODEL, GIVE USER CAPABILITY TO RUN ACROSS VARIOUS SESSIONS USING PRESET METRICS
 import os #FILE MANAGEMENT
