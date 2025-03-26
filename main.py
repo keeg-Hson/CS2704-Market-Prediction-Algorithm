@@ -20,6 +20,12 @@ import RandomForestClassifier #ML MODEL (ADDITIONAL)
 import seaborn as sns #DATA VISUALIZATION
 import joblib #SAVE/LOAD MODEL, GIVE USER CAPABILITY TO RUN ACROSS VARIOUS SESSIONS USING PRESET METRICS
 import os #FILE MANAGEMENT
+
+from dotenv import load_dotenv #DEALS WITH API KEY
+
+load_dotenv()
+api_key = os.getenv("ALPHA_VANTAGE_KEY")
+
  
 
 
@@ -37,7 +43,8 @@ def fetch_ohlcv(symbol="SPY", interval='1min', outputsize='full', api_key=None):
     
     #Fetch daily OHLCV data from Alpha Vantage API
     print('Fetching OHLCV data valuations...')
-    url=f"" #INPUT URL HERE WHEN RETRIEVED
+    url=f"https://www.alphavantage.co/query" #THIS LINK MIGHT BE BROKEN
+
     params = {
         "function": "TIME_SERIES_INTRADAY",
         "symbol": symbol,
@@ -47,7 +54,7 @@ def fetch_ohlcv(symbol="SPY", interval='1min', outputsize='full', api_key=None):
         "datatype": "json"
     }
 
-    response=requests.get(url,params=params)
+    response=requests.get(url, params=params)
     data=response.json()
 
     if "Time Series" not in data:
