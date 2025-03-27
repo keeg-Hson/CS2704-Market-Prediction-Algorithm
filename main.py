@@ -96,7 +96,7 @@ def calculate_technical_indicators(df):
 
     #'relative strength' calculation
     rs = avg_gain/avg_loss 
-    df['RSI'] = 100 - (100 / 1+rs) #RS *INDICATIOR* VALUATION
+    df['RSI'] = 100 - (100 / (1+rs)) #RS *INDICATIOR* VALUATION
 
     return df.dropna()
 
