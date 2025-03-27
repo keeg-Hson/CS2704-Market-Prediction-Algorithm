@@ -20,9 +20,13 @@ import seaborn as sns #DATA VISUALIZATION
 import joblib #SAVE/LOAD MODEL, GIVE USER CAPABILITY TO RUN ACROSS VARIOUS SESSIONS USING PRESET METRICS
 import os #FILE MANAGEMENT
 from dotenv import load_dotenv #DEALS WITH API KEY
-#vvvvv
+
+
+#Alpha Vantage API key configuration
 load_dotenv()
 api_key = os.getenv("ALPHA_VANTAGE_KEY")
+if not api_key:
+    raise ValueError("ERROR: API key not found. is it in your .env file?")
 
  
 
