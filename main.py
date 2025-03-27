@@ -19,9 +19,8 @@ from sklearn.ensemble import RandomForestClassifier #ML MODEL (ADDITIONAL)
 import seaborn as sns #DATA VISUALIZATION
 import joblib #SAVE/LOAD MODEL, GIVE USER CAPABILITY TO RUN ACROSS VARIOUS SESSIONS USING PRESET METRICS
 import os #FILE MANAGEMENT
-
 from dotenv import load_dotenv #DEALS WITH API KEY
-
+#vvvvv
 load_dotenv()
 api_key = os.getenv("ALPHA_VANTAGE_KEY")
 
@@ -62,23 +61,19 @@ def fetch_ohlcv(symbol="SPY", interval='1min', outputsize='full', api_key=None):
     
     #EXTRACT TIME SERIES DATA
     key = [k for k in data.keys() if 'Time Series' in k][0]
-    raw_df=pd.dataframe.from_dict(data[key], orient='index')
+    raw_df=pd.DataFrame.from_dict(data[key], orient='index')
     raw_df=raw_df.rename(columns={
-        "1. open": "Open"
-        "2. high": "High"
-        "3. low": "Low"
-        "4. close": "Close"
-        "5. volume": "Volume"
+        "1. open": "Open",
+        "2. high": "High",
+        "3. low": "Low",
+        "4. close": "Close",
+        "5. volume": "Volume",
     })
 
     raw_df.index =pd.to_datetime(raw_df.index)
     raw_df=raw_df.sort_index()
     print('DATA PARSED/EXTRACTED SUCCESSFULLY!')
     return raw_df
-
-    
-    
-
 
 #2. FEATURE ENGINEERING
 #-STUCTURES ACTUAL SET FUNCTIONALITY OF ALGORITHMS TECHNICAL FEATURES
