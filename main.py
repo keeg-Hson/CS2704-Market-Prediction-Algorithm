@@ -59,8 +59,24 @@ def fetch_ohlcv(symbol="SPY", interval='1min', outputsize='full', api_key=None):
     if "Time Series" not in data:
         print("ERROR: Invalid API repsonse/limit exceeded")
         return None
+    
+    #EXTRACT TIME SERIES DATA
+    key = [k for k in data.keys() if 'Time Series' in k][0]
+    raw_df=pd.dataframe.from_dict(data[key], orient='index')
+    raw_df=raw_df.rename(columns={
+        "1. open": "Open"
+        "2. high": "High"
+        "3. low": "Low"
+        "4. close": "Close"
+        "5. volume": "Volume"
+    })
 
-    #TBD: SET UP T_S_D_E , ENDPOINT CONFIGURATION
+    raw_df.index =pd.to_datetime(raw_df.index)
+    raw_df=raw_df.sort_index()
+    print('DATA PARSED/EXTRACTED SUCCESSFULLY!')
+    return raw_df
+
+    
     
 
 
@@ -69,6 +85,27 @@ def fetch_ohlcv(symbol="SPY", interval='1min', outputsize='full', api_key=None):
 #--RSI, MACID, MOVING AVERAGES, VOLATILITY, RETURNS (OR OTHER RELEVANT INDICATORS)
 #---ONLY MOST RECENT ROW NEEDS COMPUTATION: REDUCES REDUNCANCY + MITIGATES POTENTIAL MODEL OVERFITTING
 #---***RECALCULATION OF FEATURE COLUMNS + FEATURE CONSISTENCY *CRITICAL* FOR VALID MODEL OUTPUT, AS IS TO BE SOLE BASIS OF OUR BELOW RENDITIONS!****
+def calculate_technical_indicators(df):
+    #this function intends to deal with adding our extracted moving averages, returns, RSI, etc. etc. etc.: effectively all the above metrics
+    df["Return"] = df['Close'].pct_change()
+    df["MA_20"] = df['Close'].rolling(window=20).mean()
+    df["Volatility"] = df['Return'].rolling(window=20).std()
+
+    #RSI calc (14 day interval)
+    delta = df['Close'].diff()
+    gain = delta.where(delta>0,0)
+    loss = delta.where(delta<0,0)
+
+    avg_gain=gain.rolling(window=14).mean()
+    avg_loss=loss.rolling(window=14).mean()
+
+    #'relative strength' calculation
+    rs = avg_gain/avg_loss 
+    df['RSI'] = 100 - (100 / 1+rs) #RS *INDICATIOR* VALUATION
+
+    return df.dropna()
+
+
 
 
 #3. "CRASH LABELING" LOGIC
