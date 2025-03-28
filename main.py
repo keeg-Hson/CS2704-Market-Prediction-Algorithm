@@ -9,7 +9,7 @@ import requests #PULLS STOCK MARKET DATA
 import pandas as pd #ENHANCED DATA MANIPULATION LAYER
 import time #PAUSE/TIMIING PROTOCOL: NECESSARY FOR LIVE VALUATIONS
 
-#ADDITIONAL (IF NEEDED)
+#ADDITIONAL 
 import numpy as np #ENHANCED NUMERICAL HANDLING
 import matplotlib.pyplot as plt #GRAPH STATS
 import sklearn.ensemble #ML MODEL TRAINING EVALUATING ACCURACY
@@ -105,11 +105,10 @@ def calculate_technical_indicators(df):
     return df.dropna()
 
 
-
-
 #3. "CRASH LABELING" LOGIC
-#-ML LIBRARY IMPORTATIONS, AS WELL INVOILVES BINARY CLASSIFICATION OF BASIS OF (PREDICTED) FUTURE RETURNS
-#--(0==NORMAL, 1==CRASH) + CONFIDENCE PROBABLITY VALUATION
+#BINARY CLASSIFICATION ON BASIS OF (PREDICTED) FUTURE RETURNS
+#--Each row labeled as followed: (0==NORMAL (ELSE), 1==CRASH (means next day return <-3%)) 
+# + CONFIDENCE PROBABLITY VALUATION (LOOK INTO A LIL BIT)
 def label_crashes(df, threshold=-0.03): #labels crash if next day return <-3%
     df=df.copy()
     df["Future_Close"]=df['close'].shift(-1)
