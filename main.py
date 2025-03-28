@@ -28,8 +28,6 @@ api_key = os.getenv("ALPHA_VANTAGE_KEY")
 if not api_key:
     raise ValueError("ERROR: API key not found. is it in your .env file?")
 
- 
-
 
 #-----------GENERAL PSEUDOCODE/HIERARCHICAL LAYOUT-----------
 
@@ -122,7 +120,21 @@ def label_crashes(df, threshold=-0.03): #labels crash if next day return <-3%
 #-RECURSIVE SELF TRAINING OF ML MODEL
 #-- WILL UTILIZE "RANDOM FOREST" STYLED ML MODEL, BASED OFF OF THESE EXTRACTED VALUATIONS/EVERCHANGING DATASET VALUATIONS
 #---RANDOM FOREST MODEL: USED FOR INTERPRETABILITLY/ROBUSTNESS OF OVERALL ML ALGORITHM AND ARCHITECHTURE
+def train_model(df, features=["RSI", "MA_20", "Volatility", "Return"], target="Crash"): #in theory, trains our model on above extractions
+    X=df[features]
+    Y=df[target]
 
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    model=RandomForestClassifier(n_estimators=100, random_state=42)
+    model.fit(X_train, y_train)
+
+    y_pred=model.predict(X_test)
+    print('\nModel Performance Metric Valuations:')
+    print('Accuracy')
+    print('Classification Report:\n classification_repoty(y_test, y_prred)')
+
+    joblib.dump(model, "market_crash_model.pkl") #Saves our pre trained model (ideally)
+    return model
 
 #5. LIVE PREDICTION PIPELINE
 #5.1: 
