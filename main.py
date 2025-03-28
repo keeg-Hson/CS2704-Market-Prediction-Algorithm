@@ -131,7 +131,7 @@ def train_model(df, features=["RSI", "MA_20", "Volatility", "Return"], target="C
     y_pred=model.predict(X_test)
     print('\nModel Performance Metric Valuations:')
     print('Accuracy')
-    print('Classification Report:\n classification_repoty(y_test, y_prred)')
+    print('Classification Report:\n', classification_report(y_test, y_pred))
 
     joblib.dump(model, "market_crash_model.pkl") #Saves our pre trained model (ideally)
     return model
