@@ -121,18 +121,24 @@ def label_crashes(df, threshold=-0.03): #labels crash if next day return <-3%
 #-- WILL UTILIZE "RANDOM FOREST" STYLED ML MODEL, BASED OFF OF THESE EXTRACTED VALUATIONS/EVERCHANGING DATASET VALUATIONS
 #---RANDOM FOREST MODEL: USED FOR INTERPRETABILITLY/ROBUSTNESS OF OVERALL ML ALGORITHM AND ARCHITECHTURE
 def train_model(df, features=["RSI", "MA_20", "Volatility", "Return"], target="Crash"): #in theory, trains our model on above extractions
-    X=df[features]
-    Y=df[target]
+    
+    #selection of feature and target (X and y variables respectively) from DataFrame
+    X=df[features] #features inputted to be used to train our model below
+    Y=df[target] #deals w/ output labels (crash/no crash)
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-    model=RandomForestClassifier(n_estimators=100, random_state=42)
-    model.fit(X_train, y_train)
+    
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42) #splitting of dat ainto training/test subsets (80/20 split in this case)
+    model=RandomForestClassifier(n_estimators=100, random_state=42) #imitilaization of RF classifier, in this case utilizing 100 trees.
+    model.fit(X_train, y_train) #train model w/ training data
 
-    y_pred=model.predict(X_test)
+    y_pred=model.predict(X_test) #prediction crash labels on test set
+
+    #display performance metrics
     print('\nModel Performance Metric Valuations:')
     print('Accuracy')
     print('Classification Report:\n', classification_report(y_test, y_pred))
 
+    #saving of trained model above for future use.
     joblib.dump(model, "market_crash_model.pkl") #Saves our pre trained model (ideally)
     return model
 
