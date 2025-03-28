@@ -1,0 +1,57 @@
+\documentclass[runningheads]{llncs}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{listings}
+
+\title{CS2704: Final Project Proposal \\ Market Crash Prediction using AI}
+\titlerunning{Market Crash Prediction using AI}
+
+\author{Keegan Hutchinson}
+\authorrunning{K. Hutchinson}
+\institute{University of New Brunswick Saint John}
+
+\begin{document}
+\maketitle
+
+\section*{Dataset}
+
+All market data used to train our model will be extracted with use of the Alpha Vantage API; since for such an to work effectively, live valuations will be required. 
+
+\vspace{1.0em}
+
+\textbf{API Source:} \url{https://www.alphavantage.co/documentation/}
+
+
+\subsection*{Additional Info:}
+\begin{itemize}
+  \item \textbf {Endpoint Used:} \texttt{TIME\_SERIES\_DAILY\_ADJUSTED} (Alpha Vantage API endpoint that returns daily stock data valuations)
+  \item \textbf {Format:} OHLCV (Open, High, Low, Close, Volume)
+  \item  \textbf {Frequency:} Daily
+  \item  \textbf {Scope:} ~5 years of market data, to maintain computational efficiency and reduce risk of model overfitting.
+  \item  \textbf {Asset:} SPY (will utilize S\&P500 ETF as market proxy)
+\end{itemize}
+
+\section*{GitHub Repository}
+\textbf{Link:} \url{https://github.com/keeg-Hson/CS2704-Market-Prediction-Algorithm}
+
+\section*{Hypothesis}
+Hypothesis: With utilization of engineered technological indicators (i.e: RSI, volatility, moving average valuations), that we can cumulatively use these metrics to train a machine learning model that will effectively be able to predict future stock market behaviors and identify early warning signs of short-term stock market downturns.
+
+\section*{Plan for Testing Hypothesis}
+The model will function to serve five primary functional parameters, as highlighted below:
+
+\begin{itemize}
+  \item \textbf{Data Ingestion:} Involves pulling historical OHLCV data valuations using the Alpha Vantage API.
+
+  \item \textbf{Feature Engineering:} Involves transforming raw stock market data figures into utilizable signals that can be interpreted and understood by our machine learning model. Also, it will involve the creation of technical indicators (e.g., RSI, volatility, return metrics, moving averages).
+
+  \item \textbf{Crash Labeling:} Involves building a functional component that can define when a crash occurs; which here, would be the case if a cumulative market drop of \( \leq -3\% \) is detected for the next day.
+
+  \item \textbf{Model Training:}  Involves establishing a training framework that can be used to train our model based off of our recursively updating market dataset valuations. Due to its overall robustness, interpretability and superior ability to compute nonlinear relationships (which in the case of dealing with live financial market valuations is critical), a Random Forest Classifier will likely be superior for our highlighted needs.
+
+
+  \item \textbf{Prediction Pipeline:} Involves taking our above renditions and using the insights cumulated to to make live daily market predictions. This function will also intend to trigger an alert (email or SMS) if the crash probability for a given day exceeds 50\%.
+\end{itemize}
+
+\end{document}
