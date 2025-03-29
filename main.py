@@ -33,6 +33,7 @@ if not api_key:
 
 
 #CRITERIA/FUNCTIONAL COMPONENTS
+
 #1. DATA INGESTION
 #-DOWNLOAD DAILY/LIVE STOCK VALUATION FIGURES. TO BE ACCOMLISHED VIA. USE OF DAILY OHLCV FROM ALPHA VANTAGE
 #--SCHEDULE DAILY JOB (VIA SCHEDULE)
@@ -46,7 +47,7 @@ def fetch_ohlcv(symbol="SPY", interval='1min', outputsize='full', api_key=None):
     url=f"https://www.alphavantage.co/query" #THIS LINK MIGHT BE BROKEN
 
     params = {
-        "function": "TIME_SERIES_INTRADAY",
+        "function": "TIME_SERIES_DAILY_ADJUSTED", #ONLY USE TIME_SERIES_INTRADAY FOR PER MINUTE DATA, BUT THISLL DO FOR THE ASSIGNMENT OBJECTIVE ATM
         "symbol": symbol,
         "interval": interval,
         "apikey": api_key,
@@ -111,8 +112,9 @@ def label_crashes(df, threshold=-0.03): #labels crash if next day return <-3%
     df=df.copy()
     df["Future_Close"]=df['close'].shift(-1)
     df["Future_Return"]=(df["Future_Close"])-df['Close']/df['Close']
-    df["Crash"]=(df["Future_Return"]<threshold).astype(int)
     df.dropna(subset=["Future_Return"])
+    df["Crash"]=(df["Future_Return"]<threshold).astype(int)
+
     return df
 
 
@@ -172,4 +174,5 @@ return prediction, prob
 #5.2: (OPTIONAL, FOR ACCURACY SAKE)
 # RETRAIN ML MODEL MONTHLY WITH UPDATED DATASET VALUATIONS 
 # --THIS IN THEORY WILL HELP FOR OUR ML MODEL TO ADAPT TO EVER CHANGING MARKET BEHAVIOUR + MAINTAIN A LAYER OF PREDICTION ACCURACY
- 
+
+def retrain_model_monthly(df, features=['RSI', 'MA_20', "Volatility", "Return"], target='Crash'):
