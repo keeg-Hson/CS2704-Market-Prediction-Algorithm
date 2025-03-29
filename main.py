@@ -146,6 +146,28 @@ def train_model(df, features=["RSI", "MA_20", "Volatility", "Return"], target="C
 #5.1: 
 #-WILL INCLUDE ACCOMPANYING CUMULATIVE CONFIDENCE SCORES, AS DISTILLED FROM ABOVE PROCESSES
 #--MAITENCNCE OF A LIVE CONSISTENT LOG IMPORTANT HERE, AS EVEN IF NO CRASH IS PREDICTED IS STILL CRITICAL COMPONTNET OF GENERATIING A CUMULATIVE DAILY CONFIDENCE TREND VISUALIZATION
+def live_predict(df, model_path="market_crash_model.pkl"):
+    if not os.path.exists(model_path):
+        print('Model file not found')
+        return None
+    
+    model = joblib.load(model_path)
+
+    latest_row=df.iloc[-1:]
+    features=['RSI', 'MA_20', 'Volatility', 'Return']
+    prediction=model.predict(latest_row[features])[0]
+    prob=model.predict_proba(latest_row[features])[0][1] #DEALS W/ CRASH CLASS PROBABILITY
+
+    print(f'Live Prediction: {"CRASH" if prediction == 1 else "NORMAL"} | Confidence: {prob:.2f}')
+
+#LOG PREDICTIONS
+log_entry=f'{pd.Timestamp.now()}, Prediction: {prediction}, Confidence: {prob:.4f}\n'
+with open('prediction_log.txt', "a") as f: 
+    f.write(log_entry)
+
+
+return prediction, prob
+
 
 #5.2: (OPTIONAL, FOR ACCURACY SAKE)
 # RETRAIN ML MODEL MONTHLY WITH UPDATED DATASET VALUATIONS 
