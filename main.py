@@ -8,6 +8,8 @@
 import requests #PULLS STOCK MARKET DATA
 import pandas as pd #ENHANCED DATA MANIPULATION LAYER
 import time #PAUSE/TIMIING PROTOCOL: NECESSARY FOR LIVE VALUATIONS
+time.sleep(12)  # wait 12 seconds between requests
+
 
 #ADDITIONAL 
 import numpy as np #ENHANCED NUMERICAL HANDLING
@@ -77,7 +79,7 @@ def fetch_ohlcv(symbol="SPY", interval='1min', outputsize='full', api_key=None):
         print("ERROR: API rate limit exceeded. Try again later.")
         return None
     if "Time Series" not in data:
-        print("ERROR: Invalid API repsonse/limit exceeded")
+        print("ERROR: Invalid API response or unexpected format.")
         return None
     
     #EXTRACT TIME SERIES DATA
