@@ -126,7 +126,7 @@ def train_model(df, features=["RSI", "MA_20", "Volatility", "Return"], target="C
     
     #selection of feature and target (X and y variables respectively) from DataFrame
     X=df[features] #features inputted to be used to train our model below
-    Y=df[target] #deals w/ output labels (crash/no crash)
+    y=df[target] #deals w/ output labels (crash/no crash)
 
     
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42) #splitting of dat ainto training/test subsets (80/20 split in this case)
