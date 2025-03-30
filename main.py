@@ -136,7 +136,7 @@ def calculate_technical_indicators(df):
 def label_crashes(df, threshold=-0.03): #labels crash if next day return <-3%
     df=df.copy()
     df["Future_Close"]=df['close'].shift(-1)
-    df["Future_Return"]=(df["Future_Close"])-df['Close']/df['Close']
+    df["Future_Return"]=(df["Future_Close"]-df['Close'])/df['Close']
     df.dropna(subset=["Future_Return"])
     df["Crash"]=(df["Future_Return"]<threshold).astype(int)
 
