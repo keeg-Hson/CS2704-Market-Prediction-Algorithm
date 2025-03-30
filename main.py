@@ -23,8 +23,11 @@ from dotenv import load_dotenv #DEALS WITH API KEY
 
 
 #Alpha Vantage API key configuration
-load_dotenv("/Users/keeganhutchinson/CS2704-Market-Prediction-Algorithm/AV-API-key.env")
+load_dotenv() #"/Users/keeganhutchinson/CS2704-Market-Prediction-Algorithm/AV-API-key.env"
 api_key = os.getenv("ALPHA_VANTAGE_KEY")
+print(f"DEBUG: Loaded API key: {api_key}")
+
+#DEBUG: check if API key is loaded
 if not api_key:
     #raise ValueError("ERROR: API key not found. is it in your .env file?")
     print("DEBUG: API key not found! check .env file or file path")
