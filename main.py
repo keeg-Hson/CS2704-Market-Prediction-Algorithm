@@ -62,6 +62,8 @@ def fetch_ohlcv(symbol="SPY", interval='1min', outputsize='full', api_key=None):
 
     #parse .json response
     data=response.json()
+    print(f"DEBUG: API response: {data}")
+    
     #DEBUG: check if API response was successful
     if response.status_code != 200:
         print(f"ERROR: API request failed with status code {response.status_code}")
