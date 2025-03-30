@@ -163,12 +163,12 @@ def live_predict(df, model_path="market_crash_model.pkl"):
     print(f'Live Prediction: {"CRASH" if prediction == 1 else "NORMAL"} | Confidence: {prob:.2f}')
 
 #LOG PREDICTIONS
-log_entry=f'{pd.Timestamp.now()}, Prediction: {prediction}, Confidence: {prob:.4f}\n'
-with open('prediction_log.txt', "a") as f: 
-    f.write(log_entry)
+    log_entry=f'{pd.Timestamp.now()}, Prediction: {prediction}, Confidence: {prob:.4f}\n'
+    with open('prediction_log.txt', "a") as f: 
+        f.write(log_entry)
 
 
-return prediction, prob #BUGGING
+    return prediction, prob #BUGGING
 
 
 #5.2: (OPTIONAL, FOR ACCURACY SAKE)
