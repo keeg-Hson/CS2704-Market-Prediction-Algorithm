@@ -175,4 +175,8 @@ def live_predict(df, model_path="market_crash_model.pkl"):
 # RETRAIN ML MODEL MONTHLY WITH UPDATED DATASET VALUATIONS 
 # --THIS IN THEORY WILL HELP FOR OUR ML MODEL TO ADAPT TO EVER CHANGING MARKET BEHAVIOUR + MAINTAIN A LAYER OF PREDICTION ACCURACY
 
-def retrain_model_monthly(df, features=['RSI', 'MA_20', "Volatility", "Return"], target='Crash'): #BUGGING
+def retrain_model_monthly(df, features=['RSI', 'MA_20', "Volatility", "Return"], target='Crash'): 
+    print("Retraining model with updated data figures...")
+    model = train_model(df, features, target)
+    print("Model retraining successful!")
+    return model
