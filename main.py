@@ -59,8 +59,18 @@ def fetch_ohlcv(symbol="SPY", interval='1min', outputsize='full', api_key=None):
     }
 
     response=requests.get(url, params=params)
-    data=response.json()
 
+    #parse .json response
+    data=response.json()
+    #DEBUG: check if API response was successful
+    if response.status_code != 200:
+        print(f"ERROR: API request failed with status code {response.status_code}")
+        return None
+    
+    #check rate limit/invalid response time
+    if "Note" in data:
+        print("ERROR: API rate limit exceeded. Try again later.")
+        return None
     if "Time Series" not in data:
         print("ERROR: Invalid API repsonse/limit exceeded")
         return None
