@@ -81,6 +81,16 @@ def fetch_ohlcv(symbol="SPY", interval='1min', outputsize='full', api_key=None):
     print('DATA PARSED/EXTRACTED SUCCESSFULLY!')
     return raw_df
 
+#new: test call
+if __name__ == "__main__":
+    print("DEBUG: Starting program...")
+    df = fetch_ohlcv(symbol="SPY", api_key=api_key)
+    if df is not None:
+        print("DEBUG: Data fetched successfully!")
+        print(df.head())
+    else:
+        print("ERROR: Failed to fetch data.")
+
 #2. FEATURE ENGINEERING
 #-STUCTURES ACTUAL SET FUNCTIONALITY OF ALGORITHMS TECHNICAL FEATURES
 #--RSI, MACID, MOVING AVERAGES, VOLATILITY, RETURNS (OR OTHER RELEVANT INDICATORS)
