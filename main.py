@@ -50,7 +50,7 @@ def fetch_ohlcv(symbol="SPY", interval='1min', outputsize='full', api_key=None):
     url=f"https://www.alphavantage.co/query" #THIS LINK MIGHT BE BROKEN
 
     params = {
-        "function": "TIME_SERIES_DAILY_ADJUSTED", #ONLY USE TIME_SERIES_INTRADAY FOR PER MINUTE DATA, BUT THISLL DO FOR THE ASSIGNMENT OBJECTIVE ATM
+        "function": "TIME_SERIES_INTRADAY", #ONLY USE TIME_SERIES_INTRADAY FOR PER MINUTE DATA, BUT THISLL DO FOR THE ASSIGNMENT OBJECTIVE ATM #TIME_SERIES_DAILY_ADJUSTED IS APPARENTLY A PREMIUM ENDPOINT??
         "symbol": symbol,
         "interval": interval,
         "apikey": api_key,
@@ -63,7 +63,7 @@ def fetch_ohlcv(symbol="SPY", interval='1min', outputsize='full', api_key=None):
     #parse .json response
     data=response.json()
     print(f"DEBUG: API response: {data}")
-    
+
     #DEBUG: check if API response was successful
     if response.status_code != 200:
         print(f"ERROR: API request failed with status code {response.status_code}")
