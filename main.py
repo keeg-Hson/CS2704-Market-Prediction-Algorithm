@@ -330,10 +330,9 @@ if __name__ == '__main__':
 #--RETRAIN MODEL ON WEEKLY/MONTHLY BASIS (USE CRON/SCHEDULER LIBRARY FOR THIS!)
 #--EXPANSION OF FEATURE ENGINEERING FUNCTION: INCLUDE METRICS LIKE MACD, BOLLINGER BANDS, EMA, VALUME BASED METRICS ETC.
 #--BUILD DAILY SCHEDULER TO MAKE THIS HAPPEN
-#-ADD MORE CRASH INDICATORS FOR ACCURACY SAKE
 #-
 
-#additional features to add (not for project per say but just becasue why not)
+#additional features to add (not for project per se but just becasue why not)
 #-add a feature to compare predicted vs. real time valuations
 #plot: volatility spikes, RSI over time
 #crash confidence trend over time (based on predioction log)
