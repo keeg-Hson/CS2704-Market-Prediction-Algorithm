@@ -22,10 +22,12 @@ import seaborn as sns #DATA VISUALIZATION
 import joblib #SAVE/LOAD MODEL, GIVE USER CAPABILITY TO RUN ACROSS VARIOUS SESSIONS USING PRESET METRICS
 import os #FILE MANAGEMENT
 from dotenv import load_dotenv #DEALS WITH API KEY
+print("CWD:", os.getcwd())
+
 
 
 #Alpha Vantage API key configuration
-load_dotenv("/Users/keeganhutchinson/CS2704-Market-Prediction-Algorithm/.env") #"/Users/keeganhutchinson/CS2704-Market-Prediction-Algorithm/AV-API-key.env" 
+load_dotenv(dotenv_path="/Users/keeganhutchinson/CS2704-Market-Prediction-Algorithm/.env") #"/Users/keeganhutchinson/CS2704-Market-Prediction-Algorithm/AV-API-key.env" 
 api_key = os.getenv("ALPHA_VANTAGE_KEY")
 print(f"DEBUG: Loaded API key: {api_key}")
 
@@ -57,9 +59,9 @@ def fetch_ohlcv(symbol="SPY", interval='1min', outputsize='full', api_key=None):
     params = {
         "function": "TIME_SERIES_INTRADAY", #ONLY USE TIME_SERIES_INTRADAY FOR PER MINUTE DATA, BUT THISLL DO FOR THE ASSIGNMENT OBJECTIVE ATM #TIME_SERIES_DAILY_ADJUSTED IS APPARENTLY A PREMIUM ENDPOINT??
         "symbol": symbol,
-        "interval": interval,
+        "interval": "5min",
         "apikey": api_key,
-        "outputsize": outputsize,
+        "outputsize": "compact", #much smaller data set, may be good for avoiding overwhelming AI
         "datatype": "json"
     }
 
@@ -95,20 +97,24 @@ def fetch_ohlcv(symbol="SPY", interval='1min', outputsize='full', api_key=None):
         print("ERROR: API rate limit exceeded. Try again later.")
         return None
     #CHECK FOR INVALID/UNEXPECTED RESPONSE FORMAT
-    if "Time Series" not in data:
-        print("ERROR: Invalid API response or unexpected format.")
+    time_series_key=[k for k in data.keys() if 'Time Series' in k]
+    if not time_series_key:
+        print("ERROR: Time Series data not found in API response")
         return None
     
-    #EXTRACT TIME SERIES DATA
-    key = [k for k in data.keys() if 'Time Series' in k][0]
-    raw_df=pd.DataFrame.from_dict(data[key], orient='index')
+    key = time_series_key[0]
+    raw_df = pd.DataFrame.from_dict(data[key], orient='index')
     raw_df=raw_df.rename(columns={
         "1. open": "Open",
         "2. high": "High",
         "3. low": "Low",
-        "4. close": "Close",
+        "4. close": "Close",        
         "5. volume": "Volume",
     })
+    raw_df.index = pd.to_datetime(raw_df.index)
+    raw_df = raw_df.sort_index()
+    print('DATA PARSED/EXTRACTED SUCCESSFULLY!')
+    return raw_df
 
     # DEBUG: print first couple rows of DataFrame
     print(f"DEBUG: Parsed DataFrame head:\n{raw_df.head()}")
@@ -160,7 +166,7 @@ def calculate_technical_indicators(df):
 # + CONFIDENCE PROBABLITY VALUATION (LOOK INTO A LIL BIT)
 def label_crashes(df, threshold=-0.03): #labels crash if next day return <-3%
     df=df.copy()
-    df["Future_Close"]=df['close'].shift(-1)
+    df["Future_Close"]=df['Close'].shift(-1)
     df["Future_Return"]=(df["Future_Close"]-df['Close'])/df['Close']
     df.dropna(subset=["Future_Return"])
     df["Crash"]=(df["Future_Return"]<threshold).astype(int)
