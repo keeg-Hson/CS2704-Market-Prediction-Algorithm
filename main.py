@@ -265,7 +265,7 @@ def live_predict(df, model_path="market_crash_model.pkl"):
         f.write(log_entry)
 
 
-    return prediction, prob #BUGGING
+    return prediction, prob 
 
 
 #6.2: (OPTIONAL, FOR ACCURACY SAKE)
@@ -315,7 +315,7 @@ if __name__ == '__main__':
 
         model=train_model(df)
         live_predict(df)
-        visualize_data(df) #bugging
+        visualize_data(df) 
 
     else:
         print("ERROR: Failed to fetch data")
@@ -330,7 +330,9 @@ if __name__ == '__main__':
 #--RETRAIN MODEL ON WEEKLY/MONTHLY BASIS (USE CRON/SCHEDULER LIBRARY FOR THIS!)
 #--EXPANSION OF FEATURE ENGINEERING FUNCTION: INCLUDE METRICS LIKE MACD, BOLLINGER BANDS, EMA, VALUME BASED METRICS ETC.
 #--BUILD DAILY SCHEDULER TO MAKE THIS HAPPEN
-#-
+
+#-********BUILD IN "SPIKE" PREDICTION FUNCTION: WOULD BE AS SIMPLE AS INVERTING THE CURRENT LOGICAL ORDER (AS IN, SPIKE IMMINENT IF FUTURE RETURN<=3%. WOULD BE EASY TO ACHIEVE!)\
+# ------ (IF PREDICTED SPIKE, THEN BUY, ELSE SELL)
 
 #additional features to add (not for project per se but just becasue why not)
 #-add a feature to compare predicted vs. real time valuations
