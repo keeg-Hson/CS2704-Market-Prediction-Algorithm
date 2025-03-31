@@ -277,8 +277,9 @@ def retrain_model_monthly(df, features=['RSI', 'MA_20', "Volatility", "Return"],
 
 #6. (TBD) DATA VISULAIZATION
 #-WILL INCLUDE A GRAPHICAL VISUALIZATION OF PREDICTED VS. REAL TIME VALUATIONS
+#----WILL ALSO INCLUDE A MAIN FUNCTIONALITY FOR USER TO RUN PROGRAM
 def visualize_data(df):
-    plt.figure(figsize(14,7))
+    plt.figure(figsize=(14,7))
     plt.plot(df.index, df['Close'], label="Close Price", alpha=0.6)
     plt.plot(df.index, df["MA_20"], label="{20-Period Moving Average", linestyle="--", alpha=0.8)
 
@@ -297,6 +298,9 @@ def visualize_data(df):
     plt.show() #infinite chocopoints for meeeeeee x)
 
 #7. MAIN PIPELINE
+#-MAIN FUNCTIONALITY OF PROGRAM
+#--WILL INCLUDE ALL ABOVE FUNCTIONS IN A SEQUENTIAL ORDER
+#---WILL ALSO INCLUDE A MAIN FUNCTIONALITY FOR USER TO RUN PROGRAM
 if __name__ == '__main__':
     print ("DEBUG: starting program...")
     df=fetch_ohlcv(symbol="SPY", api_key = api_key, outputsize="full")
