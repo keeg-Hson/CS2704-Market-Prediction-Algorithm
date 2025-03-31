@@ -27,20 +27,6 @@ print("CWD:", os.getcwd())
 from sklearn.utils import resample #DEALS WITH IMBALANCED DATASETS
 import matplotlib.pyplot as plt #GRAPHICAL VISUALIZATION
 
-#combine into one dataset for retraining
-def balance_dataset():
-    data=pd.concat([X,y], axis=1)
-    crash=data[data["Crash"]==1]
-    normal=data[data["Crash"]==0]
-
-    #upsampling minorty class (crash data)
-    crash_upsampled=resample(crash, replace=True, n_samples=len(normal), random_state=42)
-    balanced=pd.concat([normal, crash_upsampled])
-    balanced=balanced.sample(frac=1,random_state=42) #shuffle set
-    
-    return balanced.drop('crash', axis=1), balanced['Crash']
-
-
 
 
 
@@ -194,8 +180,24 @@ def label_crashes(df, threshold=-0.03): #labels crash if next day return <-3%
 
     return df
 
+#4. Balance dataset
+#-DEALS WITH IMBALANCED DATASETS
+def balance_dataset(X,y):
+    data=pd.concat([X,y], axis=1)
+    crash=data[data["Crash"]==1]
+    normal=data[data["Crash"]==0]
 
-#4. ML MODEL ARCHETECHURE (BASED ON RANDOM FOREST MODEL)
+    #upsampling minorty class (crash data)
+    crash_upsampled=resample(crash, replace=True, n_samples=len(normal), random_state=42)
+    balanced=pd.concat([normal, crash_upsampled])
+    balanced=balanced.sample(frac=1,random_state=42) #shuffle set
+    
+    return balanced.drop('crash', axis=1), balanced['Crash']
+
+
+
+
+#5. ML MODEL ARCHETECHURE (BASED ON RANDOM FOREST MODEL)
 #-RECURSIVE SELF TRAINING OF ML MODEL
 #-- WILL UTILIZE "RANDOM FOREST" STYLED ML MODEL, BASED OFF OF THESE EXTRACTED VALUATIONS/EVERCHANGING DATASET VALUATIONS
 #---RANDOM FOREST MODEL: USED FOR INTERPRETABILITLY/ROBUSTNESS OF OVERALL ML ALGORITHM AND ARCHITECHTURE
@@ -222,8 +224,9 @@ def train_model(df, features=["RSI", "MA_20", "Volatility", "Return"], target="C
     joblib.dump(model, "market_crash_model.pkl") #Saves our pre trained model (ideally)
     return model
 
-#5. LIVE PREDICTION PIPELINE
-#5.1: 
+
+#6. LIVE PREDICTION PIPELINE
+#6.1: 
 #-WILL INCLUDE ACCOMPANYING CUMULATIVE CONFIDENCE SCORES, AS DISTILLED FROM ABOVE PROCESSES
 #--MAITENCNCE OF A LIVE CONSISTENT LOG IMPORTANT HERE, AS EVEN IF NO CRASH IS PREDICTED IS STILL CRITICAL COMPONTNET OF GENERATIING A CUMULATIVE DAILY CONFIDENCE TREND VISUALIZATION
 def live_predict(df, model_path="market_crash_model.pkl"):
@@ -265,7 +268,7 @@ def live_predict(df, model_path="market_crash_model.pkl"):
     return prediction, prob #BUGGING
 
 
-#5.2: (OPTIONAL, FOR ACCURACY SAKE)
+#6.2: (OPTIONAL, FOR ACCURACY SAKE)
 # RETRAIN ML MODEL MONTHLY WITH UPDATED DATASET VALUATIONS 
 # --THIS IN THEORY WILL HELP FOR OUR ML MODEL TO ADAPT TO EVER CHANGING MARKET BEHAVIOUR + MAINTAIN A LAYER OF PREDICTION ACCURACY
 
@@ -275,7 +278,7 @@ def retrain_model_monthly(df, features=['RSI', 'MA_20', "Volatility", "Return"],
     print("Model retraining successful!")
     return model
 
-#6. (TBD) DATA VISULAIZATION
+#7. (TBD) DATA VISULAIZATION
 #-WILL INCLUDE A GRAPHICAL VISUALIZATION OF PREDICTED VS. REAL TIME VALUATIONS
 #----WILL ALSO INCLUDE A MAIN FUNCTIONALITY FOR USER TO RUN PROGRAM
 def visualize_data(df):
@@ -297,7 +300,7 @@ def visualize_data(df):
     plt.tight_layout()
     plt.show() #infinite chocopoints for meeeeeee x)
 
-#7. MAIN PIPELINE
+#8. MAIN PIPELINE
 #-MAIN FUNCTIONALITY OF PROGRAM
 #--WILL INCLUDE ALL ABOVE FUNCTIONS IN A SEQUENTIAL ORDER
 #---WILL ALSO INCLUDE A MAIN FUNCTIONALITY FOR USER TO RUN PROGRAM
@@ -316,4 +319,14 @@ if __name__ == '__main__':
 
     else:
         print("ERROR: Failed to fetch data")
+
+#for project
+#-run program daily
+#compare real vs predicted figures side by side, map out trends
+
+#additional features to add (not for project per say but just becasue why not)
+#-add a feature to compare predicted vs. real time valuations
+#plot: volatility spikes, RSI over time
+#crash confidence trend over time (based on predioction log)
+
 
