@@ -25,7 +25,7 @@ from dotenv import load_dotenv #DEALS WITH API KEY
 
 
 #Alpha Vantage API key configuration
-load_dotenv() #"/Users/keeganhutchinson/CS2704-Market-Prediction-Algorithm/AV-API-key.env"
+load_dotenv("/Users/keeganhutchinson/CS2704-Market-Prediction-Algorithm/.env") #"/Users/keeganhutchinson/CS2704-Market-Prediction-Algorithm/AV-API-key.env" 
 api_key = os.getenv("ALPHA_VANTAGE_KEY")
 print(f"DEBUG: Loaded API key: {api_key}")
 
@@ -63,6 +63,21 @@ def fetch_ohlcv(symbol="SPY", interval='1min', outputsize='full', api_key=None):
         "datatype": "json"
     }
 
+#    params = {
+#        "function": "TIME_SERIES_INTRADAY", #ONLY USE TIME_SERIES_INTRADAY FOR PER MINUTE DATA, BUT THISLL DO FOR THE ASSIGNMENT OBJECTIVE ATM #TIME_SERIES_DAILY_ADJUSTED IS APPARENTLY A PREMIUM ENDPOINT??
+#        "symbol": "SPY",
+#        "interval": "1min",
+#        "apikey": api_key,
+#        "outputsize": "compact",
+#        "datatype": "json"
+#    }
+    print(f"DEBUG: API request params: {params}")
+    print(f"DEBUG: API request URL: {url}?{requests.compat.urlencode(params)}")
+
+    # Make the API request
+    response = requests.get(url, params=params)
+    print(f"DEBUG: API response status code: {response.status_code}")
+    #-------
     response=requests.get(url, params=params)
 
     #parse .json response
@@ -78,6 +93,7 @@ def fetch_ohlcv(symbol="SPY", interval='1min', outputsize='full', api_key=None):
     if "Note" in data:
         print("ERROR: API rate limit exceeded. Try again later.")
         return None
+    #CHECK FOR INVALID/UNEXPECTED RESPONSE FORMAT
     if "Time Series" not in data:
         print("ERROR: Invalid API response or unexpected format.")
         return None
@@ -92,6 +108,9 @@ def fetch_ohlcv(symbol="SPY", interval='1min', outputsize='full', api_key=None):
         "4. close": "Close",
         "5. volume": "Volume",
     })
+
+    # DEBUG: print first couple rows of DataFrame
+    print(f"DEBUG: Parsed DataFrame head:\n{raw_df.head()}")
 
     raw_df.index =pd.to_datetime(raw_df.index)
     raw_df=raw_df.sort_index()
