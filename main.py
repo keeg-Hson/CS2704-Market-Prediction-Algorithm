@@ -323,6 +323,7 @@ if __name__ == '__main__':
 #for project
 #-run program daily
 #compare real vs predicted figures side by side, map out trends
+#***add a "in human speak" function, just to make valuations less abstract and numerical***
 
 #additional features to add (not for project per say but just becasue why not)
 #-add a feature to compare predicted vs. real time valuations
