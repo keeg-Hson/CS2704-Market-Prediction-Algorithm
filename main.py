@@ -216,9 +216,25 @@ def live_predict(df, model_path="market_crash_model.pkl"):
 
     latest_row=df.iloc[-1:]
     features=['RSI', 'MA_20', 'Volatility', 'Return']
+    #prediction=model.predict(latest_row[features])[0]
+    #prob=model.predict_proba(latest_row[features])[0][1] #DEALS W/ CRASH CLASS PROBABILITY
+    #NEW: Crash Probability logic
     prediction=model.predict(latest_row[features])[0]
-    prob=model.predict_proba(latest_row[features])[0][1] #DEALS W/ CRASH CLASS PROBABILITY
 
+    #pull class probs
+    class_probs=model.predict_proba(latest_row[features])[0]
+
+    #check classes present
+    class_labels=model.classes_
+
+    #find indicies of class 1 (crash), if present
+    if 1 in class_labels:
+        crash_index=list(class_labels).index(1)
+        prob=class_probs[crash_index]
+    else:
+        prob=0.0 #if in this case, class 1 isnt learned, default to 0 confidence.
+
+    #FIN: CRASH PROBABILITY LOGIC
     print(f'Live Prediction: {"CRASH" if prediction == 1 else "NORMAL"} | Confidence: {prob:.2f}')
 
 #LOG PREDICTIONS
