@@ -24,6 +24,23 @@ import os #FILE MANAGEMENT
 from dotenv import load_dotenv #DEALS WITH API KEY
 print("CWD:", os.getcwd())
 
+from sklearn.utils import resample #DEALS WITH IMBALANCED DATASETS
+
+#combine into one dataset for retraining
+def balance_dataset():
+    data=pd.concat([X,y], axis=1)
+    crash=data[data["Crash"]==1]
+    normal=data[data["Crash"]==0]
+
+    #upsampling minorty class (crash data)
+    crash_upsampled=resample(crash, replace=True, n_samples=len(normal), random_state=42)
+    balanced=pd.concat([normal, crash_upsampled])
+    balanced=balanced.sample(frac=1,random_state=42) #shuffle set
+    
+    return balanced.drop('crash', axis=1), balanced['Crash']
+
+
+
 
 
 #Alpha Vantage API key configuration
@@ -186,6 +203,7 @@ def train_model(df, features=["RSI", "MA_20", "Volatility", "Return"], target="C
     #selection of feature and target (X and y variables respectively) from DataFrame
     X=df[features] #features inputted to be used to train our model below
     y=df[target] #deals w/ output labels (crash/no crash)
+    X,y=balance_dataset(X,y) #balances dataset to deal with imbalanced classes
 
     
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42) #splitting of dat ainto training/test subsets (80/20 split in this case)
