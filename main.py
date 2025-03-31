@@ -57,11 +57,11 @@ def fetch_ohlcv(symbol="SPY", interval='1min', outputsize='full', api_key=None):
     url=f"https://www.alphavantage.co/query" #THIS LINK MIGHT BE BROKEN
 
     params = {
-        "function": "TIME_SERIES_INTRADAY", #ONLY USE TIME_SERIES_INTRADAY FOR PER MINUTE DATA, BUT THISLL DO FOR THE ASSIGNMENT OBJECTIVE ATM #TIME_SERIES_DAILY_ADJUSTED IS APPARENTLY A PREMIUM ENDPOINT??
+        "function": "TIME_SERIES_DAILY", #ONLY USE TIME_SERIES_INTRADAY FOR PER MINUTE DATA, BUT THISLL DO FOR THE ASSIGNMENT OBJECTIVE ATM #TIME_SERIES_DAILY_ADJUSTED IS APPARENTLY A PREMIUM ENDPOINT??
         "symbol": symbol,
         "interval": "5min",
         "apikey": api_key,
-        "outputsize": "compact", #much smaller data set, may be good for avoiding overwhelming AI
+        "outputsize": outputsize, #much smaller data set, may be good for avoiding overwhelming AI
         "datatype": "json"
     }
 
@@ -259,12 +259,15 @@ def retrain_model_monthly(df, features=['RSI', 'MA_20', "Volatility", "Return"],
 #6.
 if __name__ == '__main__':
     print ("DEBUG: starting program...")
-    df=fetch_ohlcv(symbol="SPY", api_key = api_key)
+    df=fetch_ohlcv(symbol="SPY", api_key = api_key, outputsize="full")
 
     if df is not None:
         df = calculate_technical_indicators(df)
         df=label_crashes(df)
+        df = df.replace([np.inf, -np.inf], np.nan).dropna()
+
         model=train_model(df)
+        
         live_predict(df)
     else:
         print("ERROR: Failed to fetch data")
