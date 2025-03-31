@@ -54,7 +54,7 @@ else:
 #--FETCHING OF LATEST SPY DATA (VIA ALPHA VANTAGE API): *COMPLETED*
 #---THIS IS TO FETCH CURRENT MARKET VALUATION VARIABLES, DAILY ADJUSTED OHLCV VALUATIONS 
 #----VIA USE OF ***TIME_SERIES_DAILY_ADJUSTED*** ENDPOINT, RETURNING OHLCV VALUATIONS FROM AV API
-def fetch_ohlcv(symbol="SPY", interval='1min', outputsize='full', api_key=None):
+def fetch_ohlcv(symbol="SPY", interval='1min', outputsize='full', api_key=None): #for testing: outputsize: (thing), 
     
     #Fetch daily OHLCV data from Alpha Vantage API
     print('Fetching OHLCV data valuations...')
@@ -192,7 +192,7 @@ def balance_dataset(X,y):
     balanced=pd.concat([normal, crash_upsampled])
     balanced=balanced.sample(frac=1,random_state=42) #shuffle set
     
-    return balanced.drop('crash', axis=1), balanced['Crash']
+    return balanced.drop('Crash', axis=1), balanced['Crash']
 
 
 
