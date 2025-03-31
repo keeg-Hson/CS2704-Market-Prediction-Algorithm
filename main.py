@@ -25,6 +25,7 @@ from dotenv import load_dotenv #DEALS WITH API KEY
 print("CWD:", os.getcwd())
 
 from sklearn.utils import resample #DEALS WITH IMBALANCED DATASETS
+import matplotlib.pyplot as plt #GRAPHICAL VISUALIZATION
 
 #combine into one dataset for retraining
 def balance_dataset():
@@ -291,3 +292,23 @@ if __name__ == '__main__':
         print("ERROR: Failed to fetch data")
 
 #7. (TBD) DATA VISULAIZATION
+#-WILL INCLUDE A GRAPHICAL VISUALIZATION OF PREDICTED VS. REAL TIME VALUATIONS
+def visualize_data(df):
+    plt.figure(figsize(14,7))
+    plt.plot(df.index, df=['Close'], label="Close Price", alpha=0.6)
+    plt.plot(df.index, df["MA_20"], label="{20-Period Moving Average", linestyle="--", alpha=0.8)
+
+    #highlight market crashes
+    if "Crash" in df.columns:
+        crash_points = df[df["Crash"]==1]
+        plt.scatter(crash_points.index, crsh_points=['Close'], color='red', label="Predicted Market Crashes", zorder=5)
+
+    #PLOT FORMATTING
+    plt.title("Stock Pricing w/ Moving Averages + Crash Events")
+    plt.xlabel("Date")
+    plt.ylabel("Price")
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show() #infinite chocopoints for meeeeeee x)
+
