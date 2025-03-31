@@ -111,6 +111,9 @@ def fetch_ohlcv(symbol="SPY", interval='1min', outputsize='full', api_key=None):
         "4. close": "Close",        
         "5. volume": "Volume",
     })
+    # Convert "sting" valuations to "floats"
+    raw_df = raw_df.astype(float)
+
     raw_df.index = pd.to_datetime(raw_df.index)
     raw_df = raw_df.sort_index()
     print('DATA PARSED/EXTRACTED SUCCESSFULLY!')
@@ -236,3 +239,18 @@ def retrain_model_monthly(df, features=['RSI', 'MA_20', "Volatility", "Return"],
     model = train_model(df, features, target)
     print("Model retraining successful!")
     return model
+
+#6.
+if __name__ == '__main__':
+    print ("DEBUG: starting program...")
+    df=fetch_ohlcv(symbol="SPY", api_key = api_key)
+
+    if df is not None:
+        df = calculate_technical_indicators(df)
+        df=label_crashes(df)
+        model=train_model(df)
+        live_predict(df)
+    else:
+        print("ERROR: Failed to fetch data")
+
+#7. (TBD) DATA VISULAIZATION
