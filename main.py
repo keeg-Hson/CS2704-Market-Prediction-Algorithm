@@ -286,8 +286,9 @@ if __name__ == '__main__':
         df = df.replace([np.inf, -np.inf], np.nan).dropna()
 
         model=train_model(df)
-        
         live_predict(df)
+        visualize_data(df) #bugging
+
     else:
         print("ERROR: Failed to fetch data")
 
