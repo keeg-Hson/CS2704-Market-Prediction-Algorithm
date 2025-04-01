@@ -22,6 +22,7 @@ import seaborn as sns #DATA VISUALIZATION
 import joblib #SAVE/LOAD MODEL, GIVE USER CAPABILITY TO RUN ACROSS VARIOUS SESSIONS USING PRESET METRICS
 import os #FILE MANAGEMENT
 from dotenv import load_dotenv #DEALS WITH API KEY
+import schedule #DAILY SCHEDULER
 print("CWD:", os.getcwd())
 
 from sklearn.utils import resample #DEALS WITH IMBALANCED DATASETS
@@ -45,7 +46,7 @@ else:
 #------DAILY SCHEDULER FUNCTION--------#
 def daily_job():
     print('[Scheduler] Executing daily market prediction...')
-    
+
     df=fetch_ohlcv(symbol="SPY", api_key=api_key, outputsize="full")
     if df is not None:
         df=calculate_technical_indicators(df)
@@ -53,7 +54,7 @@ def daily_job():
         df=df.replace([np.inf, -np.inf], np.nan).dropna()
         model=train_model(df)
         live_predict(df)
-        visualize_data(df)
+        visualize_data(df, save_path=f'graphs/prediction_{pd.Timestamp.now().date()}.png') #, show=False (might be of use?)
     else:
         print("ERROR: Failed to fetch data")
 
@@ -68,7 +69,7 @@ def start_scheduler():
 
 #-----ENTRY POINT FOR SCHEDULER-----#
 if __name__ == "__main__":
-    mode==input('Please enter *run* to run now or *schedule* for daily execution').strip().lower()
+    mode=input('Please enter *run* to run now or *schedule* for daily execution').strip().lower()
     if mode == 'run':
         daily_job()
     elif mode == "schedule":
@@ -320,7 +321,8 @@ def retrain_model_monthly(df, features=['RSI', 'MA_20', "Volatility", "Return"],
 #7. (TBD) DATA VISULAIZATION
 #-WILL INCLUDE A GRAPHICAL VISUALIZATION OF PREDICTED VS. REAL TIME VALUATIONS
 #----WILL ALSO INCLUDE A MAIN FUNCTIONALITY FOR USER TO RUN PROGRAM
-def visualize_data(df):
+def visualize_data(df, save_path='graphs/daily_plot.png', show=True):
+    os.makedirs(os.path.dirname(save_path), exist_ok=True) #ensures folder esists
     plt.figure(figsize=(14,7))
     plt.plot(df.index, df['Close'], label="Close Price", alpha=0.6)
     plt.plot(df.index, df["MA_20"], label="{20-Period Moving Average", linestyle="--", alpha=0.8)
@@ -337,7 +339,18 @@ def visualize_data(df):
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
-    plt.show() #infinite chocopoints for meeeeeee x)
+
+    #ENSURE OUTPUT DIR IS PRESENT
+    os.makedirs(os.path.dirname(save_path), exist_ok=True) #maybe remove this? idk
+
+    #save figure
+    plt.savefig(save_path)
+    print(f'[Graph] Saved plot to {save_path}')
+
+    #SHOW ONLY IF SHOW=TRUE
+    if show:
+        plt.show() #infinite chocopoints for meeeeeee x)
+    plt.close() #frees up unneeded memory this way
 
 #8. MAIN PIPELINE
 #-MAIN FUNCTIONALITY OF PROGRAM
