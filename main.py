@@ -227,6 +227,16 @@ def train_model(df, features=["RSI", "MA_20", "Volatility", "Return"], target="C
     return model
 
 
+def in_human_speak(prediction, confidence):
+    if prediction==1:
+        print(f"\nWARNING!: Market Crash Imminent! Confidence: {confidence:.2f}")
+    else:
+        if confidence < 0.2:
+            print(f"\nMARKET APPEARS STABLE! Model confidence of crash probablitiy very low (confidence: {confidence:.2f})")
+        elif confidence  < 0.5:
+            print(f"\nCAUTION ADVISED!: Model predicts {confidence:.2f} chance of crash! Stay aware of market conditions")
+        else:
+            print(f"\nMIXED SIGNALS: while model predicts that crash is unlikely, the model shows moderate confidence ({confidence:.2f}). Stay vigilant!")
 #6. LIVE PREDICTION PIPELINE
 #6.1: 
 #-WILL INCLUDE ACCOMPANYING CUMULATIVE CONFIDENCE SCORES, AS DISTILLED FROM ABOVE PROCESSES
@@ -260,6 +270,7 @@ def live_predict(df, model_path="market_crash_model.pkl"):
 
     #FIN: CRASH PROBABILITY LOGIC
     print(f'Live Prediction: {"CRASH" if prediction == 1 else "NORMAL"} | Confidence: {prob:.2f}')
+    in_human_speak(prediction, prob)
 
 #LOG PREDICTIONS
     log_entry=f'{pd.Timestamp.now()}, Prediction: {prediction}, Confidence: {prob:.4f}\n'
@@ -292,14 +303,14 @@ def visualize_data(df, save_path='graphs/daily_plot.png', show=True):
     #highlight market crashes
     if "Crash" in df.columns:
         crash_points = df[df["Crash"]==1]
-        plt.scatter(crash_points.index, crash_points['Close'], color='red', label="Predicted Market Crashes", zorder=5)
+        plt.scatter(crash_points.index, crash_points['Close'], color='red', label="Predicted Market Crashes", zorder=5, marker="v")
         #highlight market crashes
     if "Spike" in df.columns:
         spike_points = df[df["Spike"]==1]
-        plt.scatter(spike_points.index, spike_points['Close'], color='green', label="Predicted Market Spikes", zorder=5)
+        plt.scatter(spike_points.index, spike_points['Close'], color='green', label="Predicted Market Spikes", zorder=5 , marker="^")
 
     #PLOT FORMATTING
-    plt.title("Stock Pricing w/ Moving Averages + Crash Events")
+    plt.title("Stock Pricing w/ Moving Averages + Crash/Spike Events")
     plt.xlabel("Date")
     plt.ylabel("Price")
     plt.legend()
