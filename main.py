@@ -45,8 +45,9 @@ else:
 #------DAILY SCHEDULER FUNCTION--------#
 def daily_job():
     print('[Scheduler] Executing daily market prediction...')
+    
+    df=fetch_ohlcv(symbol="SPY", api_key=api_key, outputsize="full")
     if df is not None:
-        df=fetch_ohlcv(symbol="SPY", api_key=api_key, outputsize="full")
         df=calculate_technical_indicators(df)
         df=label_crashes(df)
         df=df.replace([np.inf, -np.inf], np.nan).dropna()
