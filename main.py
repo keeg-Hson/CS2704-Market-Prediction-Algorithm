@@ -261,24 +261,20 @@ def live_predict(df, model_path="market_crash_model.pkl"):
     #check classes present
     class_labels=model.classes_
 
-    #find indicies of class 1 (crash), if present
-    if 1 in class_labels:
-        crash_index=list(class_labels).index(1)
-        prob=class_probs[crash_index]
-    else:
-        prob=0.0 #if in this case, class 1 isnt learned, default to 0 confidence.
+    #crash/spike confidence:
+    crash_confidence=class_probs[list(class_labels).index(1)] if 1 in class_labels else 0
+    spike_confidence=class_probs[list(class_labels).index(2)] if 2 in class_labels else 0
 
-    #FIN: CRASH PROBABILITY LOGIC
-    print(f'Live Prediction: {"CRASH" if prediction == 1 else "NORMAL"} | Confidence: {prob:.2f}')
-    in_human_speak(prediction, prob)
+    #print prediction
+    print(f"Live Prediction: {"CRASH" if prediction == 1 else "SPIKE" if prediction == 2 else "NORMAL"} | Crash Confidence: {crash_confidence:.2f} | Spike Confidence: {spike_confidence:.2f}")
+    print(f"Crash Confidence: {crash_confidence:.2f} | Spike Confidence: {spike_confidence:.2f}")
 
-#LOG PREDICTIONS
-    log_entry=f'{pd.Timestamp.now()}, Prediction: {prediction}, Confidence: {prob:.4f}\n'
-    with open('prediction_log.txt', "a") as f: 
+    log_entry=f'{pd.Timestamp.now()}, Prediction: {prediction}, Crash Confidence: {crash_confidence:.4f}, Spike Confidence: {spike_confidence:.4f}\n'
+    with open('prediction_log.txt', "a") as f:
         f.write(log_entry)
 
-
-    return prediction, prob 
+    in_human_speak(prediction, crash_confidence)
+    return prediction, crash_confidence, spike_confidence 
 
 
 #6.2: (OPTIONAL, FOR ACCURACY SAKE)
