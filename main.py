@@ -324,7 +324,7 @@ if __name__ == '__main__':
 
     if df is not None:
         df = calculate_technical_indicators(df)
-        df=label_crashes(df)
+        df=label_events(df)
         df = df.replace([np.inf, -np.inf], np.nan).dropna()
 
         model=train_model(df)
@@ -341,7 +341,7 @@ def daily_job():
     df=fetch_ohlcv(symbol="SPY", api_key=api_key, outputsize="full")
     if df is not None:
         df=calculate_technical_indicators(df)
-        df=label_crashes(df)
+        df=label_events(df)
         df=df.replace([np.inf, -np.inf], np.nan).dropna()
         model=train_model(df)
         live_predict(df)
