@@ -167,7 +167,7 @@ def calculate_technical_indicators(df):
     return df.dropna()
 
 
-#3. "CRASH LABELING" LOGIC
+#3.1 "CRASH LABELING" LOGIC
 #BINARY CLASSIFICATION ON BASIS OF (PREDICTED) FUTURE RETURNS
 #--Each row labeled as followed: (0==NORMAL (ELSE), 1==CRASH (means next day return <-3%)) 
 # + CONFIDENCE PROBABLITY VALUATION (LOOK INTO A LIL BIT)
@@ -177,8 +177,22 @@ def label_crashes(df, threshold=-0.03): #labels crash if next day return <-3%
     df=df.copy()
     df["Future_Close"]=df['Close'].shift(-1)
     df["Future_Return"]=(df["Future_Close"]-df['Close'])/df['Close']
-    df.dropna(subset=["Future_Return"])
+    df=df.dropna(subset=["Future_Return"])
     df["Crash"]=(df["Future_Return"]<threshold).astype(int)
+
+    return df
+
+#3.2 "SPIKE LABELING" LOGIC
+#BINARY CLASSIFICATION ON BASIS OF (PREDICTED) FUTURE RETURNS) 
+# + CONFIDENCE PROBABLITY VALUATION (LOOK INTO A LIL BIT)
+
+#N0TE= THIS FUNCTION COULD BE INVERTED TO PREDICT SPIKES AS WELL (IE: LITERALLY, JUST SET THRESHOLD=0.03 INSTEAD OF -0.03. EASY PEASY)
+def label_spikes(df, threshold=0.03): #labels crash if next day return <-3%
+    df=df.copy()
+    df["Future_Close"]=df['Close'].shift(-1)
+    df["Future_Return"]=(df["Future_Close"]-df['Close'])/df['Close']
+    df=df.dropna(subset=["Future_Return"])
+    df["Spike"]=(df["Future_Return"]>threshold).astype(int)
 
     return df
 
