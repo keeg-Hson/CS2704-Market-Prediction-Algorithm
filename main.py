@@ -63,13 +63,18 @@ def start_scheduler():
     #schedules job for 6pm daily
     schedule.every().day.at('18:00').do(daily_job)
     print('[Scheduler] Scheduled daily_job for 6:00pm')
+    print("scheuduler initiatied, now waiting for jobs...")
     while True:
-        schedule.run_pending()
-        time.sleep(60)
+        try:
+            schedule.run_pending()
+            time.sleep(60)
+        except Exception as e:
+            print(f"ERROR: {e}")
+            #time.sleep(60)
 
 #-----ENTRY POINT FOR SCHEDULER-----#
 if __name__ == "__main__":
-    mode=input('Please enter *run* to run now or *schedule* for daily execution').strip().lower()
+    mode=input('Please enter *run* to run now or *schedule* for daily execution: ').strip().lower()
     if mode == 'run':
         daily_job()
     elif mode == "schedule":
