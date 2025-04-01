@@ -84,7 +84,7 @@ def fetch_ohlcv(symbol="SPY", interval='1min', outputsize='full', api_key=None):
     response = requests.get(url, params=params)
     print(f"DEBUG: API response status code: {response.status_code}")
     #-------
-    response=requests.get(url, params=params)
+    #response=requests.get(url, params=params)
 
     #parse .json response
     data=response.json()
@@ -290,7 +290,7 @@ def live_predict(df, model_path="market_crash_model.pkl"):
     with open('prediction_log.txt', "a") as f:
         f.write(log_entry)
 
-    in_human_speak(prediction, crash_confidence)
+    in_human_speak(prediction, crash_confidence, spike_confidence)
     return prediction, crash_confidence, spike_confidence 
 
 
@@ -308,7 +308,7 @@ def retrain_model_monthly(df, features=['RSI', 'MA_20', "Volatility", "Return"],
 #-WILL INCLUDE A GRAPHICAL VISUALIZATION OF PREDICTED VS. REAL TIME VALUATIONS
 #----WILL ALSO INCLUDE A MAIN FUNCTIONALITY FOR USER TO RUN PROGRAM
 def visualize_data(df, save_path='graphs/daily_plot.png', show=True):
-    os.makedirs(os.path.dirname(save_path), exist_ok=True) #ensures folder esists
+    os.makedirs(os.path.dirname(save_path), exist_ok=True) #ensures folder exsists
     plt.figure(figsize=(14,7))
     plt.plot(df.index, df['Close'], label="Close Price", alpha=0.6)
     plt.plot(df.index, df["MA_20"], label="{20-Period Moving Average", linestyle="--", alpha=0.8)
@@ -317,7 +317,8 @@ def visualize_data(df, save_path='graphs/daily_plot.png', show=True):
     if "Crash" in df.columns:
         crash_points = df[df["Crash"]==1]
         plt.scatter(crash_points.index, crash_points['Close'], color='red', label="Predicted Market Crashes", zorder=5, marker="v")
-        #highlight market crashes
+        
+    #highlight market spikes
     if "Spike" in df.columns:
         spike_points = df[df["Spike"]==1]
         plt.scatter(spike_points.index, spike_points['Close'], color='green', label="Predicted Market Spikes", zorder=5 , marker="^")
