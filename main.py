@@ -283,8 +283,8 @@ def live_predict(df, model_path="market_crash_model.pkl"):
     spike_confidence=class_probs[list(class_labels).index(2)] if 2 in class_labels else 0
 
     #print prediction
-    print(f"Live Prediction: {"CRASH" if prediction == 1 else "SPIKE" if prediction == 2 else "NORMAL"} | Crash Confidence: {crash_confidence:.2f} | Spike Confidence: {spike_confidence:.2f}")
-    print(f"Crash Confidence: {crash_confidence:.2f} | Spike Confidence: {spike_confidence:.2f}")
+    print(f'Live Prediction: {"CRASH" if prediction == 1 else "SPIKE" if prediction == 2 else "NORMAL"} | Crash Confidence: {crash_confidence:.2f} | Spike Confidence: {spike_confidence:.2f}')
+    print(f'Crash Confidence: {crash_confidence:.2f} | Spike Confidence: {spike_confidence:.2f}')
 
     log_entry=f'{pd.Timestamp.now()}, Prediction: {prediction}, Crash Confidence: {crash_confidence:.4f}, Spike Confidence: {spike_confidence:.4f}\n'
     with open('prediction_log.txt', "a") as f:
@@ -317,7 +317,7 @@ def visualize_data(df, save_path='graphs/daily_plot.png', show=True):
     if "Crash" in df.columns:
         crash_points = df[df["Crash"]==1]
         plt.scatter(crash_points.index, crash_points['Close'], color='red', label="Predicted Market Crashes", zorder=5, marker="v")
-        
+
     #highlight market spikes
     if "Spike" in df.columns:
         spike_points = df[df["Spike"]==1]
