@@ -229,14 +229,14 @@ def train_model(df, features=["RSI", "MA_20", "Volatility", "Return"], target="C
 
 def in_human_speak(prediction, confidence):
     if prediction==1:
-        print(f"\nWARNING!: Market Crash Imminent! Confidence: {confidence:.2f}")
+        print(f"\n🚨 WARNING!: Market Crash Imminent! Confidence: {confidence*100:.1f}%")
     else:
         if confidence < 0.2:
-            print(f"\nMARKET APPEARS STABLE! Model confidence of crash probablitiy very low (confidence: {confidence:.2f})")
+            print(f"\n✅ MARKET APPEARS STABLE! Model confidence of crash probablitiy very low (confidence: {confidence*100:.1f}%)")
         elif confidence  < 0.5:
-            print(f"\nCAUTION ADVISED!: Model predicts {confidence:.2f} chance of crash! Stay aware of market conditions")
+            print(f"\n ⚠️ CAUTION ADVISED!: Model predicts {confidence*100:.1f}% chance of crash! Stay aware of market conditions")
         else:
-            print(f"\nMIXED SIGNALS: while model predicts that crash is unlikely, the model shows moderate confidence ({confidence:.2f}). Stay vigilant!")
+            print(f"\n🔍 MIXED SIGNALS: while model predicts that crash is unlikely, the model shows moderate confidence ({confidence*100:.1f}%). Stay vigilant!")
 #6. LIVE PREDICTION PIPELINE
 #6.1: 
 #-WILL INCLUDE ACCOMPANYING CUMULATIVE CONFIDENCE SCORES, AS DISTILLED FROM ABOVE PROCESSES
