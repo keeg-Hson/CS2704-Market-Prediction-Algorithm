@@ -76,14 +76,18 @@ def start_scheduler():
             #time.sleep(60)
 
 #-----ENTRY POINT FOR SCHEDULER-----#
-if __name__ == "__main__":
-    mode=input('Please enter *run* to run now or *schedule* for daily execution: ').strip().lower()
-    if mode == 'run':
-        daily_job()
-    elif mode == "hybrid":
-        start_scheduler()
-    else:
-        print("ERROR: Invalid mode. Exiting program")
+
+def run_once_then_schedule():
+    daily_job()
+    schedule.every().day.at('18:00').do(daily_job)
+    print('[Scheduler] Scheduled daily_job for 6:00pm')
+
+    while True:
+        schedule.run_pending()
+        time.sleep(60)
+
+if __name__ == '__main__':
+    run_once_then_schedule()
         
 
 
