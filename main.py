@@ -28,9 +28,6 @@ print("CWD:", os.getcwd())
 from sklearn.utils import resample #DEALS WITH IMBALANCED DATASETS
 import matplotlib.pyplot as plt #GRAPHICAL VISUALIZATION
 
-
-
-
 #Alpha Vantage API key configuration
 load_dotenv(dotenv_path="/Users/keeganhutchinson/CS2704-Market-Prediction-Algorithm/.env") #"/Users/keeganhutchinson/CS2704-Market-Prediction-Algorithm/AV-API-key.env" 
 api_key = os.getenv("ALPHA_VANTAGE_KEY")
