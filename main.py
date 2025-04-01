@@ -60,6 +60,9 @@ def daily_job():
 
 #-----START DAILY SCHEDULER-----#
 def start_scheduler():
+    #inintial predicitons
+    print("[scheduler] Running initial prediction...")
+    daily_job() #runs once immediately
     #schedules job for 6pm daily
     schedule.every().day.at('18:00').do(daily_job)
     print('[Scheduler] Scheduled daily_job for 6:00pm')
@@ -77,7 +80,7 @@ if __name__ == "__main__":
     mode=input('Please enter *run* to run now or *schedule* for daily execution: ').strip().lower()
     if mode == 'run':
         daily_job()
-    elif mode == "schedule":
+    elif mode == "hybrid":
         start_scheduler()
     else:
         print("ERROR: Invalid mode. Exiting program")
