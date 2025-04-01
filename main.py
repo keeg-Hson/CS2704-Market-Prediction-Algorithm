@@ -293,6 +293,10 @@ def visualize_data(df, save_path='graphs/daily_plot.png', show=True):
     if "Crash" in df.columns:
         crash_points = df[df["Crash"]==1]
         plt.scatter(crash_points.index, crash_points['Close'], color='red', label="Predicted Market Crashes", zorder=5)
+        #highlight market crashes
+    if "Spike" in df.columns:
+        spike_points = df[df["Spike"]==1]
+        plt.scatter(spike_points.index, spike_points['Close'], color='green', label="Predicted Market Spikes", zorder=5)
 
     #PLOT FORMATTING
     plt.title("Stock Pricing w/ Moving Averages + Crash Events")
