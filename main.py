@@ -43,56 +43,6 @@ if not api_key:
 else:
     print ("DEBUG: API Key loaded successfully!")
 
-#------DAILY SCHEDULER FUNCTION--------#
-def daily_job():
-    print('[Scheduler] Executing daily market prediction...')
-
-    df=fetch_ohlcv(symbol="SPY", api_key=api_key, outputsize="full")
-    if df is not None:
-        df=calculate_technical_indicators(df)
-        df=label_crashes(df)
-        df=df.replace([np.inf, -np.inf], np.nan).dropna()
-        model=train_model(df)
-        live_predict(df)
-        visualize_data(df, save_path=f'graphs/prediction_{pd.Timestamp.now().date()}.png') #, show=False (might be of use?)
-    else:
-        print("ERROR: Failed to fetch data")
-
-#-----START DAILY SCHEDULER-----#
-def start_scheduler():
-    #inintial predicitons
-    print("[scheduler] Running initial prediction...")
-    daily_job() #runs once immediately
-    #schedules job for 6pm daily
-    schedule.every().day.at('18:00').do(daily_job)
-    print('[Scheduler] Scheduled daily_job for 6:00pm')
-    print("scheuduler initiatied, now waiting for jobs...")
-    while True:
-        try:
-            schedule.run_pending()
-            time.sleep(60)
-        except Exception as e:
-            print(f"ERROR: {e}")
-            #time.sleep(60)
-
-#-----ENTRY POINT FOR SCHEDULER-----#
-
-def run_once_then_schedule():
-    daily_job()
-    schedule.every().day.at('18:00').do(daily_job)
-    print('[Scheduler] Scheduled daily_job for 6:00pm')
-
-    while True:
-        schedule.run_pending()
-        time.sleep(60)
-
-if __name__ == '__main__':
-    run_once_then_schedule()
-        
-
-
-
-
 #-----------GENERAL PSEUDOCODE/HIERARCHICAL LAYOUT-----------
 
 
@@ -383,6 +333,52 @@ if __name__ == '__main__':
 
     else:
         print("ERROR: Failed to fetch data")
+
+#------DAILY SCHEDULER FUNCTION--------#
+def daily_job():
+    print('[Scheduler] Executing daily market prediction...')
+
+    df=fetch_ohlcv(symbol="SPY", api_key=api_key, outputsize="full")
+    if df is not None:
+        df=calculate_technical_indicators(df)
+        df=label_crashes(df)
+        df=df.replace([np.inf, -np.inf], np.nan).dropna()
+        model=train_model(df)
+        live_predict(df)
+        visualize_data(df, save_path=f'graphs/prediction_{pd.Timestamp.now().date()}.png') #, show=False (might be of use?)
+    else:
+        print("ERROR: Failed to fetch data")
+
+#-----START DAILY SCHEDULER-----#
+def start_scheduler():
+    #inintial predicitons
+    print("[scheduler] Running initial prediction...")
+    daily_job() #runs once immediately
+    #schedules job for 6pm daily
+    schedule.every().day.at('18:00').do(daily_job)
+    print('[Scheduler] Scheduled daily_job for 6:00pm')
+    print("scheuduler initiatied, now waiting for jobs...")
+    while True:
+        try:
+            schedule.run_pending()
+            time.sleep(60)
+        except Exception as e:
+            print(f"ERROR: {e}")
+            #time.sleep(60)
+
+#-----ENTRY POINT FOR SCHEDULER-----#
+
+def run_once_then_schedule():
+    daily_job()
+    schedule.every().day.at('18:00').do(daily_job)
+    print('[Scheduler] Scheduled daily_job for 6:00pm')
+
+    while True:
+        schedule.run_pending()
+        time.sleep(60)
+
+if __name__ == '__main__':
+    run_once_then_schedule()
 
 #for project
 #-run program daily
