@@ -227,16 +227,33 @@ def train_model(df, features=["RSI", "MA_20", "Volatility", "Return"], target="C
     return model
 
 
-def in_human_speak(prediction, confidence):
+def in_human_speak(prediction, crash_conf, spike_conf):
+    #CRASH
     if prediction==1:
-        print(f"\n🚨 WARNING!: Market Crash Imminent! Confidence: {confidence*100:.1f}%")
-    else:
-        if confidence < 0.2:
-            print(f"\n✅ MARKET APPEARS STABLE! Model confidence of crash probablitiy very low (confidence: {confidence*100:.1f}%)")
-        elif confidence  < 0.5:
-            print(f"\n ⚠️ CAUTION ADVISED!: Model predicts {confidence*100:.1f}% chance of crash! Stay aware of market conditions")
+        print(f"\n🚨 WARNING!: Market Crash Imminent! Confidence: {crash_conf*100:.1f}%")
+        if crash_conf < 0.2:
+            print(f"\n✅ MARKET APPEARS STABLE! Model confidence of crash probablitiy very low (confidence: {crash_conf*100:.1f}%)")
+        elif crash_conf  < 0.5:
+            print(f"\n ⚠️ CAUTION ADVISED!: Model predicts {crash_conf*100:.1f}% chance of crash! Stay aware of market conditions")
         else:
-            print(f"\n🔍 MIXED SIGNALS: while model predicts that crash is unlikely, the model shows moderate confidence ({confidence*100:.1f}%). Stay vigilant!")
+            print(f"\n🔍 MIXED SIGNALS: while model predicts that crash is unlikely, the model shows moderate confidence ({crash_conf*100:.1f}%). Stay vigilant!")
+    #SPIKE
+    elif prediction == 2:
+        if spike_conf > 0.8:
+            print(f'\n📈STRONG BUY SIGNAL!: High confidence in spike probability detected! ({spike_conf * 100:.1f}% confidence)')
+        elif spike_conf > 0.5:
+            print(f"\n✅POSSIBLE UPWARD TREND!: Moderate likelihood of market rally detected ({spike_conf * 100:.1f}% confidence)")
+        else:
+            print(f"\n🔍 Mild upward movement expected! ({spike_conf * 100:.1f}% confidence)")
+    #NEUTRAL
+    else:
+        if crash_conf > 0.4:
+            print(f"\n⚠️NEUTRAL CONSENSUS: however slight crash indicators detected ({crash_conf * 100:.1f}% confidence)")
+        elif spike_conf > 0.4:
+            print(f"\n⚠️NEUTRAL CONSENSUS: But possible emergence of upward trend present ({crash_conf * 100:.1f}% confidence)")
+        else:
+            print(f"\n✅MARKET APPEARS STABLE: no significant crash/spike behaviour detected! ({crash_conf * 100:.1f}% confidence)")
+
 #6. LIVE PREDICTION PIPELINE
 #6.1: 
 #-WILL INCLUDE ACCOMPANYING CUMULATIVE CONFIDENCE SCORES, AS DISTILLED FROM ABOVE PROCESSES
