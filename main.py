@@ -46,13 +46,13 @@ else:
 def daily_job():
     print('[Scheduler] Executing daily market prediction...')
     if df is not None:
-        df=fetch_ohlcv(symbol="SPY", api_key=api_key outputsize="full")
+        df=fetch_ohlcv(symbol="SPY", api_key=api_key, outputsize="full")
         df=calculate_technical_indicators(df)
         df=label_crashes(df)
         df=df.replace([np.inf, -np.inf], np.nan).dropna()
         model=train_model(df)
         live_predict(df)
-        visualize_date(df)
+        visualize_data(df)
     else:
         print("ERROR: Failed to fetch data")
 
