@@ -42,6 +42,42 @@ if not api_key:
 else:
     print ("DEBUG: API Key loaded successfully!")
 
+#------DAILY SCHEDULER FUNCTION--------#
+def daily_job():
+    print('[Scheduler] Executing daily market prediction...')
+    if df is not None:
+        df=fetch_ohlcv(symbol="SPY", api_key=api_key outputsize="full")
+        df=calculate_technical_indicators(df)
+        df=label_crashes(df)
+        df=df.replace([np.inf, -np.inf], np.nan).dropna()
+        model=train_model(df)
+        live_predict(df)
+        visualize_date(df)
+    else:
+        print("ERROR: Failed to fetch data")
+
+#-----START DAILY SCHEDULER-----#
+def start_scheduler():
+    #schedules job for 6pm daily
+    schedule.every().day.at('18:00').do(daily_job)
+    print('[Scheduler] Scheduled daily_job for 6:00pm')
+    while True:
+        schedule.run_pending()
+        time.sleep(60)
+
+#-----ENTRY POINT FOR SCHEDULER-----#
+if __name__ == "__main__":
+    mode==input('Please enter *run* to run now or *schedule* for daily execution').strip().lower()
+    if mode == 'run':
+        daily_job()
+    elif mode == "schedule":
+        start_scheduler()
+    else:
+        print("ERROR: Invalid mode. Exiting program")
+        
+
+
+
 
 #-----------GENERAL PSEUDOCODE/HIERARCHICAL LAYOUT-----------
 
@@ -171,6 +207,8 @@ def calculate_technical_indicators(df):
 #BINARY CLASSIFICATION ON BASIS OF (PREDICTED) FUTURE RETURNS
 #--Each row labeled as followed: (0==NORMAL (ELSE), 1==CRASH (means next day return <-3%)) 
 # + CONFIDENCE PROBABLITY VALUATION (LOOK INTO A LIL BIT)
+
+#N0TE= THIS FUNCTION COULD BE INVERTED TO PREDICT SPIKES AS WELL (IE: LITERALLY, JUST SET THRESHOLD=0.03 INSTEAD OF -0.03. EASY PEASY)
 def label_crashes(df, threshold=-0.03): #labels crash if next day return <-3%
     df=df.copy()
     df["Future_Close"]=df['Close'].shift(-1)
