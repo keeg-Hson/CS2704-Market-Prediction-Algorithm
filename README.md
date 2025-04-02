@@ -1,7 +1,7 @@
 # 📈 CS2704-Market-Prediction-Algorithm
 -----
-#👨‍💻 Author
-#Keegan Hutchinson
+👨‍💻 Author:
+Keegan Hutchinson
 ------
 Welcome!
 
