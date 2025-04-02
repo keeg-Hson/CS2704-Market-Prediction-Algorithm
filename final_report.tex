@@ -1,0 +1,48 @@
+\documentclass[runningheads]{llncs}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{amsmath}
+
+\title{CS2704 Final Report:\\Live Market Prediction Using AI}
+\author{Keegan Hutchinson}
+\institute{Faculty of Computer Science\\
+University of New Brunswick Saint John\\
+\email{khutchi3@unb.ca}\\
+(Solo Submission)}
+
+\begin{document}
+
+\maketitle
+
+%\begin{abstract}
+%probably unnecessary, but add if you can!
+%\end{abstract}
+
+\section{Introduction and Background}
+The following project was built around the idea that given market behaviours can be adequately mapped out with the use of KPIs such as RSI and volatility metrics, that such metrics could be paired together and computed in tandem with live stock market valuations that could be utilized within a much larger dataset that could be parsed and optimized with the use of a sound machine learning architecture. In essence, this project intends to position itself as a machine learning market prediction tool that can be used to predict stock market behaviours - in this case, past, present, and future related metrics using custom ‘crash’ and ‘spike’ class in-built indicators.
+
+Furthermore, the model uses the Alpha Vantage API with use of the \texttt{TIME\_SERIES\_DAILY} endpoint, as this provides live daily stock valuations as well as a robust array of historical data that can be used as reference for model training purposes. Furthermore, for model training purposes we are utilizing a Random Forest machine learning classifier, as its general robustness, interpretability as well as effectiveness dealing with linear data analytics is crucial for such a use case.
+
+\section{Hypothesis}
+For our primary hypothesis, we are seeking to uncover that with the utilization of extracted key market performance indicators such as RSI, volatility, and return related metrics that we can adequately map out and predict market behaviours across all scopes of time; be that past, present, or future forecasts. Furthermore, we also seek to test whether or not a machine learning model  (in this case, a Random Forest classifier) can be adequately utilized as a tool that can be both trained/retrained on a regular basis with the use of a recursively evolving OHLCV (open, high, low, close, volume) dataset, as a means of providing a potential user base with an effective and adaptable market forecasting tool. We also make the additional proposition that with the utilization of a in-built data ingestion pipeline,  live market prediction insights, as well as a scheduled recursive model retraining function that we can successfully generate a model capable of adequately maintaining predictive performance; even in the face of oppositional forces, such as general market volatility and behavioural drift behaviours.
+
+\section{Analysis and Interpretation}
+Breaking down our source code into segments, we can begin by acknowledging that the larger model comprises around 8 different primary parts that are all pieces of a much larger infrastructural pipeline. In summary, the program seeks to pull live market valuations with use of the Alpha Vantage API, in which these appended figures are then to be further parsed, rendered down, and utilized for the calculations of our various specified KPI metrics (RSI, volatility, returns), then labeling such events based on future return potentials. From here, it segments these condensed and ordered findings further into three respective categories: crash (market crash imminent), normal(neutral/stable market conditions), and spike (market rally imminent). In essence, the primary goal to be achieved with such renditions is to identify potential market rallies/crashes before they occur, providing users with a useful tool to map out early warning or buy signals. Furthermore, these renditions are as well stowed into a larger .txt filing composed of various extracted metrics to be used for model retaining purposes, in which the functionality of such retraining infrastructure is fully present and functional within our current final product. The model in question here uses a Random Forest Classifier as a means of distinguishing and interpreting crash events. 
+
+Though simplified with ultimate respect for the intended scope of the final project, the system showcases live market forecasting potential utilizing a basic machine learning and feature engineering infrastructure. As well, such a program could be further expanded to accommodate for complex systems, potential accounting for more alternative and even nuancical data metrics affecting general economic conditions and market fluctuations (i.e.- news sentiment, or other macroeconomic conditions). Furthermore, the implementation of a daily scheduler function was done with the intent of making this tool practically useful within a real world sense, providing a medium for organizations and individuals to automate monitoring systems, or a tool for personal financial assistants seeking to extract market forecasting metrics.
+
+\section{Conclusion}
+In conclusion, our final product displays the successful designing and deployment of a fully working and utilizable market forecasting algorithm. By leveraging  live stock market forecast valuations with use of the Alpha Vantage API, our system is capable of successfully analyzing market patterns, trends, and behaviours with the use of our built in spike/crash classifiers, as well as providing daily stock market predictions with accompanying confidence scores. 
+
+With the use of effective event labeling and with use of technical indicator engineering, as well as an in-built supervised classification system, our algorithm provides users with useful predicting and interpretive market insights. Ultimately, the project successfully satisfied the end objective of utilizing calculated KPI valuations to both map out and predict market behavioural trends; successfully highlighting the potential of combining both live data pipelines with an interpretable machine learning infrastructure to support both market awareness and general financial decision making processes.
+
+\begin{thebibliography}{1}
+\bibitem{alpha}
+Alpha Vantage: Free APIs for Realtime and Historical Financial Data, \url{https://www.alphavantage.co/documentation/}
+
+\bibitem{alpha}
+Project Repository: CS2704-Market-Prediction-Algorithm,
+\url{https://github.com/keeg-Hson/CS2704-Market-Prediction-Algorithm}
+\end{thebibliography}
+
+\end{document}
