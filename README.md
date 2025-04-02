@@ -1,3 +1,5 @@
+# 📈 CS2704-Market-Prediction-Algorithm
+
 ## 👨‍💻 Author
 
 - Keegan Hutchinson [@keeg-Hson](https://www.github.com/keeg-Hson)
