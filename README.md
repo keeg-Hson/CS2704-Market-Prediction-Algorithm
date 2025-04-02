@@ -56,17 +56,21 @@ Intended for analysis + backtesting purposes.
 
 3. **Run program maually**
     
-    python main.py
+        python main.py
 
 4. **Run with daily scheduler**
     
-    python main.py  #Scheduler initializes automatically at 6:00 PM
+        python main.py  #Scheduler initializes automatically at 6:00 PM
 
 -----
-##Example Output:
-    **Graphs:** Saved to /graphs/
-    **Model:** Stored in Market_Crash_Model.pkl
-    **Logs:** Confidence prediction valuations stored in /prediction_log.txt
+
+## Example Output:
+### Graphs:
+Saved to /graphs/
+### Model: 
+Stored in Market_Crash_Model.pkl
+### Logs:
+ Confidence prediction valuations stored in /prediction_log.txt
 -----
 
 
