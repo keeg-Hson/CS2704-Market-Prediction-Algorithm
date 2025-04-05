@@ -51,7 +51,7 @@ else:
 #--FETCHING OF LATEST SPY DATA (VIA ALPHA VANTAGE API): *COMPLETED*
 #---THIS IS TO FETCH CURRENT MARKET VALUATION VARIABLES, DAILY ADJUSTED OHLCV VALUATIONS 
 #----VIA USE OF ***TIME_SERIES_DAILY_ADJUSTED*** ENDPOINT, RETURNING OHLCV VALUATIONS FROM AV API
-def fetch_ohlcv(symbol="SPY", interval='1min', outputsize='full', api_key=None): #for testing: outputsize: (thing), 
+def fetch_ohlcv(symbol="SPY", interval='1min', outputsize='full', api_key=None): #for testing: outputsize: (thing),  #add interval='1min' if it fails
     
     #Fetch daily OHLCV data from Alpha Vantage API
     print('Fetching OHLCV data valuations...')
