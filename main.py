@@ -58,7 +58,8 @@ def fetch_ohlcv(symbol="SPY", interval='1min', outputsize='full', api_key=None):
     url=f"https://www.alphavantage.co/query" #THIS LINK MIGHT BE BROKEN
 
     params = {
-        "function": "TIME_SERIES_DAILY", #ONLY USE TIME_SERIES_INTRADAY FOR PER MINUTE DATA, BUT THISLL DO FOR THE ASSIGNMENT OBJECTIVE ATM #TIME_SERIES_DAILY_ADJUSTED IS APPARENTLY A PREMIUM ENDPOINT??
+        #"function": "TIME_SERIES_DAILY", #ONLY USE TIME_SERIES_INTRADAY FOR PER MINUTE DATA, BUT THISLL DO FOR THE ASSIGNMENT OBJECTIVE ATM #TIME_SERIES_DAILY_ADJUSTED IS APPARENTLY A PREMIUM ENDPOINT??
+        "function": "TIME_SERIES_INTRADAY",
         "symbol": symbol,
         "interval": "5min",
         "apikey": api_key,
