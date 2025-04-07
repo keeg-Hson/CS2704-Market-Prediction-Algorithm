@@ -304,7 +304,6 @@ def retrain_model_monthly(df, features=['RSI', 'MA_20', "Volatility", "Return"],
 
 #7. (TBD) DATA VISULAIZATION
 #-WILL INCLUDE A GRAPHICAL VISUALIZATION OF PREDICTED VS. REAL TIME VALUATIONS
-#----WILL ALSO INCLUDE A MAIN FUNCTIONALITY FOR USER TO RUN PROGRAM
 def visualize_data(df, save_path='graphs/daily_plot.png', show=True):
     os.makedirs(os.path.dirname(save_path), exist_ok=True) #ensures folder exsists
     plt.figure(figsize=(14,7))
@@ -361,6 +360,11 @@ if __name__ == '__main__':
     else:
         print("ERROR: Failed to fetch data")
 
+
+
+#9: DAILY SCHEDULER FUNCTIONALITY
+#-WILL INCLUDE A DAILY SCHEDULER FUNCTIONALITY TO RUN THE PROGRAM ON A DAILY BASIS
+#--WILL INCLUDE A FUNCTIONALITY TO RUN THE PROGRAM ONCE, THEN SCHEDULE IT TO RUN DAILY
 #------DAILY SCHEDULER FUNCTION--------#
 def daily_job():
     print('[Scheduler] Executing daily market prediction...')
