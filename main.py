@@ -363,9 +363,9 @@ def plot_confidence_trend(log_file="prediction_log.txt", show=True):
     plt.plot(df['Timestamp'], df['Spike_Conf'], label="Spike Confidence", color='green', linewidth=2)
     plt.title("Market Crash/Spike Confidence Trends Over Time")
     plt.xlabel("Date")
-    plt.ylabel=('Level of Confidence')
+    plt.ylabel=("Level of Confidence")
     plt.ylim(0,1.05)
-    plt.grid=(True)
+    plt.grid(True)
     plt.legend()
     plt.tight_layout()
 
@@ -414,6 +414,7 @@ def daily_job():
         model=train_model(df, target='Event')
         live_predict(df)
         visualize_data(df, save_path=f'graphs/prediction_{pd.Timestamp.now().date()}.png') #, show=False (might be of use?)
+        plot_confidence_trend() #plots conf trend
     else:
         print("ERROR: Failed to fetch data")
 
@@ -449,7 +450,6 @@ if __name__ == '__main__':
     run_once_then_schedule()
 
 
-plot_confidence_trend() #plots conf trend
 
 #for project
 #-run program daily
