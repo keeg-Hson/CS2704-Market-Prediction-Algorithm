@@ -178,6 +178,12 @@ def label_events(df, crash_threshold=-0.03, spike_threshold=0.03):
     df['Crash']=(df["Future_Return"]<crash_threshold).astype(int)
     df['Spike']=(df["Future_Return"]>spike_threshold).astype(int)
 
+    df['Event']=np.select(
+        [df['Crash'] == 1, df['Spike'] == 1],
+        [1,2], #1 == 'Crash', 2 == 'Spike'
+        default=0 #0 == 'Normal'
+    )
+
     return df
 
 #4. Balance dataset
@@ -201,12 +207,12 @@ def balance_dataset(X,y):
 #-RECURSIVE SELF TRAINING OF ML MODEL
 #-- WILL UTILIZE "RANDOM FOREST" STYLED ML MODEL, BASED OFF OF THESE EXTRACTED VALUATIONS/EVERCHANGING DATASET VALUATIONS
 #---RANDOM FOREST MODEL: USED FOR INTERPRETABILITLY/ROBUSTNESS OF OVERALL ML ALGORITHM AND ARCHITECHTURE
-def train_model(df, features=["RSI", "MA_20", "Volatility", "Return"], target="Crash"): #in theory, trains our model on above extractions
+def train_model(df, features=["RSI", "MA_20", "Volatility", "Return"], target="Event"): #in theory, trains our model on above extractions
     
     #selection of feature and target (X and y variables respectively) from DataFrame
     X=df[features] #features inputted to be used to train our model below
     y=df[target] #deals w/ output labels (crash/no crash)
-    X,y=balance_dataset(X,y) #balances dataset to deal with imbalanced classes
+    #X,y=balance_dataset(X,y) #balances dataset to deal with imbalanced classes
 
     
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42) #splitting of dat ainto training/test subsets (80/20 split in this case)
@@ -263,8 +269,8 @@ def live_predict(df, model_path="market_crash_model.pkl"):
     
     model = joblib.load(model_path)
 
-    latest_row=df.iloc[-1:]
-    features=['RSI', 'MA_20', 'Volatility', 'Return']
+    latest_row = df.iloc[-5:].mean().to_frame().T #averages the last 5 rows of data to get a more stable valuation
+    features = ['RSI', 'MA_20', 'Volatility', 'Return']
     #prediction=model.predict(latest_row[features])[0]
     #prob=model.predict_proba(latest_row[features])[0][1] #DEALS W/ CRASH CLASS PROBABILITY
     #NEW: Crash Probability logic
@@ -298,7 +304,7 @@ def live_predict(df, model_path="market_crash_model.pkl"):
 
 def retrain_model_monthly(df, features=['RSI', 'MA_20', "Volatility", "Return"], target='Crash'): 
     print("Retraining model with updated data figures...")
-    model = train_model(df, features, target)
+    model = train_model(df, features=features, target="Event")
     print("Model retraining successful!")
     return model
 
@@ -353,7 +359,7 @@ if __name__ == '__main__':
         df=label_events(df)
         df = df.replace([np.inf, -np.inf], np.nan).dropna()
 
-        model=train_model(df)
+        model=train_model(df, target='Event')
         live_predict(df)
         visualize_data(df) 
 
@@ -374,7 +380,7 @@ def daily_job():
         df=calculate_technical_indicators(df)
         df=label_events(df)
         df=df.replace([np.inf, -np.inf], np.nan).dropna()
-        model=train_model(df)
+        model=train_model(df, target='Event')
         live_predict(df)
         visualize_data(df, save_path=f'graphs/prediction_{pd.Timestamp.now().date()}.png') #, show=False (might be of use?)
     else:
