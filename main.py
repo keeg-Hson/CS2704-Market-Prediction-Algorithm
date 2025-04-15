@@ -211,7 +211,7 @@ def train_model(df, features=["RSI", "MA_20", "Volatility", "Return"], target="E
     
     #selection of feature and target (X and y variables respectively) from DataFrame
     X=df[features] #features inputted to be used to train our model below
-    y=df[target] #deals w/ output labels (crash/no crash)
+    y=df[target] #deals w/ output labels (0=='normal, 1=='crash", 2=='spike')
     #X,y=balance_dataset(X,y) #balances dataset to deal with imbalanced classes
 
     
