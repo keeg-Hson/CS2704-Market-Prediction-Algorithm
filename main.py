@@ -290,7 +290,7 @@ def live_predict(df, model_path="market_crash_model.pkl"):
     print(f'Live Prediction: {"CRASH" if prediction == 1 else "SPIKE" if prediction == 2 else "NORMAL"} | Crash Confidence: {crash_confidence:.2f} | Spike Confidence: {spike_confidence:.2f}')
     print(f'Crash Confidence: {crash_confidence:.2f} | Spike Confidence: {spike_confidence:.2f}')
 
-    log_entry=f'{pd.Timestamp.now()}, Prediction: {prediction}, Crash Confidence: {crash_confidence:.4f}, Spike Confidence: {spike_confidence:.4f}\n'
+    log_entry=f'{pd.Timestamp.now()},{prediction},{crash_confidence:.4f},{spike_confidence:.4f}\n'
     with open('prediction_log.txt', "a") as f:
         f.write(log_entry)
 
@@ -354,6 +354,7 @@ def plot_confidence_trend(log_file="prediction_log.txt", show=True):
             names=["Timestamp", 'Prediction', 'Crash_Conf', "Spike_Conf"],
             parse_dates=["Timestamp"]
         )
+        df = df.dropna(subset=["Crash_Conf", "Spike_Conf"]) #drops rows with missing or confiused data (NaN values)
     except FileNotFoundError:
         print(f"ERROR: Log file {log_file} not found.")
         return
