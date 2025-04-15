@@ -346,7 +346,38 @@ def visualize_data(df, save_path='graphs/daily_plot.png', show=True):
         plt.show() #infinite chocopoints for meeeeeee x)
     plt.close() #frees up unneeded memory this way
 
-#8. MAIN PIPELINE
+#8. CONDIDENCE TREND VISUALIZER
+def plot_confidence_trend(log_file="prediction_log.txt", show=True):
+    try:
+        df = pd.read_csv(
+            log_file,
+            names=["Timestamp", 'Prediction', 'Crash_Conf', "Spike_Conf"],
+            parse_dates=["Timestamp"]
+        )
+    except FileNotFoundError:
+        print(f"ERROR: Log file {log_file} not found.")
+        return
+    
+    plt.figure(figsize=(14,7))
+    plt.plot(df['Timestamp'], df['Crash_Conf'], label="Crash Confidence", color='red', linewidth=2)
+    plt.plot(df['Timestamp'], df['Spike_Conf'], label="Spike Confidence", color='green', linewidth=2)
+    plt.title("Market Crash/Spike Confidence Trends Over Time")
+    plt.xlabel("Date")
+    plt.ylabel=('Level of Confidence')
+    plt.ylim(0,1.05)
+    plt.grid=(True)
+    plt.legend()
+    plt.tight_layout()
+
+    os.makedirs('graphs', exist_ok=True)
+    plt.savefig('graphs/confidence_trend_plot.png')
+    print('[Graph] Saved confidence trend plot to graphs/confidence_trend_plot.png')
+
+    if show:
+        plt.show()
+    plt.close()
+
+#9. MAIN PIPELINE
 #-MAIN FUNCTIONALITY OF PROGRAM
 #--WILL INCLUDE ALL ABOVE FUNCTIONS IN A SEQUENTIAL ORDER
 #---WILL ALSO INCLUDE A MAIN FUNCTIONALITY FOR USER TO RUN PROGRAM
@@ -368,7 +399,7 @@ if __name__ == '__main__':
 
 
 
-#9: DAILY SCHEDULER FUNCTIONALITY
+#10: DAILY SCHEDULER FUNCTIONALITY
 #-WILL INCLUDE A DAILY SCHEDULER FUNCTIONALITY TO RUN THE PROGRAM ON A DAILY BASIS
 #--WILL INCLUDE A FUNCTIONALITY TO RUN THE PROGRAM ONCE, THEN SCHEDULE IT TO RUN DAILY
 #------DAILY SCHEDULER FUNCTION--------#
@@ -416,6 +447,9 @@ def run_once_then_schedule():
 
 if __name__ == '__main__':
     run_once_then_schedule()
+
+
+plot_confidence_trend() #plots conf trend
 
 #for project
 #-run program daily
