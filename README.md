@@ -6,6 +6,8 @@
 
 [➡️ Click here to download the final presentation (PowerPoint)](./CS2704_Live_Market_Prediction_Using_AI.pptx)
 
+![CS2704: MrktPredAlgorithm](https://github.com/user-attachments/assets/d1b814eb-20b2-4832-b0b7-eeb985efeba8)
+
 ## Welcome!
 The following project was both designed and implementtd to pose as a machine learning algorithm that seeks to predict both past, present, and future stock market behaviours (such as market spikes and crashes) wish the utilization of both built in technical indicators (such as RSI, moving average, and volatility calculations), as well as a Random Forest machine learning classifier model.
 
