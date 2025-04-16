@@ -438,11 +438,11 @@ def daily_job():
         df=df.replace([np.inf, -np.inf], np.nan).dropna()
         model=train_model(df, target='Event')
         live_predict(df)
-        visualize_data(df, save_path=f'graphs/prediction_{pd.Timestamp.now().date()}.png') #, show=False (might be of use?)
-        show_combined_dashboard(df)
+        #visualize_data(df, save_path=f'graphs/prediction_{pd.Timestamp.now().date()}.png') #, show=False (might be of use?)
+        show_combined_dashboard(df) #will handle both graphs anyway
 
         clean_predicton_log()
-        plot_confidence_trend() #plots conf trend
+        #plot_confidence_trend() #plots conf trend
     else:
         print("ERROR: Failed to fetch data")
 
@@ -475,7 +475,7 @@ def run_once_then_schedule():
         time.sleep(60)
 
 #12. Combined Dashboard Functionality
-def show_combined_dashboard(df, log_file="prediction_loig.txt"):
+def show_combined_dashboard(df, log_file="prediction_log.txt"):
     #load pred log
     try:
         log_df=pd.read_csv(
@@ -516,11 +516,12 @@ def show_combined_dashboard(df, log_file="prediction_loig.txt"):
 
     ax2.set_title("Market Crash/Spike Confidence Trend Valuations Over Time")
     ax2.set_xlabel("Date")
-    ax2.set_ylabel("condifence level")
+    ax2.set_ylabel("confidence level")
     ax2.set_ylim(0,1.05)
     ax2.grid(True)
     ax2.legend()
-
+    
+    plt.savefig("graphs/combined_dashboard.png")
     plt.tight_layout()
     plt.show()
 
