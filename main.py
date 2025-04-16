@@ -490,19 +490,19 @@ def show_combined_dashboard(df, log_file="prediction_log.txt"):
         print(f"[Error]: Log file {log_file} not found!")
         return
     
-    #sest up fig with 2 subplots
+    #set up fig with 2 subplots
     fig, (ax1,ax2)=plt.subplots(2,1,figsize=(14,22)) #2r,1c
 
     #top: stock prices
     ax1.plot(df.index,df['Close'], label="Close Price",alpha=0.7)
-    ax1.plot(df.index,df["MA_20"],LABEL="20 DAY MOVING AVERAGE",linestyle="--",alpha=0.8)
+    ax1.plot(df.index,df["MA_20"],label="20 DAY MOVING AVERAGE",linestyle="--",alpha=0.8)
 
     if "Crash" in df.columns:
         crash_points=df[df["Crash"]==1]
-        ax1.scatter(crash_points.index, crash_points['Close'],color="red",label="Crashes", marker="v")
+        ax1.scatter(crash_points.index, crash_points['Close'],color="red",label="Predicted Crashes", marker="v")
     if "Spike" in df.columns:
         spike_points=df[df["Spike"]==1]
-        ax1.scatter(spike_points.index, spike_points['Close'],color="green",label="Spikes", marker="^")
+        ax1.scatter(spike_points.index, spike_points['Close'],color="green",label="Predicted Spikes", marker="^")
 
     ax1.set_title("Stock Prices + Crash Spike Events - With Accompnaying Moving Averages")
     ax1.set_xlabel("Date")
