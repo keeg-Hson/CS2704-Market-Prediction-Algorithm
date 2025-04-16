@@ -473,6 +473,8 @@ def run_once_then_schedule():
             time.sleep(1)
     except KeyboardInterrupt:
         print("Scehduler terminated by user")
+        print("\nExiting program...")
+        exit(0)
 
     while True:
         schedule.run_pending()
