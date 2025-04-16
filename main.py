@@ -395,8 +395,7 @@ if __name__ == '__main__':
         df = df.replace([np.inf, -np.inf], np.nan).dropna()
 
         model=train_model(df, target='Event')
-        live_predict(df)
-        visualize_data(df) 
+        live_predict(df) 
 
     else:
         print("ERROR: Failed to fetch data")
@@ -438,11 +437,8 @@ def daily_job():
         df=df.replace([np.inf, -np.inf], np.nan).dropna()
         model=train_model(df, target='Event')
         live_predict(df)
-        #visualize_data(df, save_path=f'graphs/prediction_{pd.Timestamp.now().date()}.png') #, show=False (might be of use?)
         show_combined_dashboard(df) #will handle both graphs anyway
-
         clean_predicton_log()
-        #plot_confidence_trend() #plots conf trend
     else:
         print("ERROR: Failed to fetch data")
 
