@@ -439,6 +439,7 @@ def daily_job():
         model=train_model(df, target='Event')
         live_predict(df)
         visualize_data(df, save_path=f'graphs/prediction_{pd.Timestamp.now().date()}.png') #, show=False (might be of use?)
+        show_combined_dashboard(df)
 
         clean_predicton_log()
         plot_confidence_trend() #plots conf trend
@@ -496,7 +497,32 @@ def show_combined_dashboard(df, log_file="prediction_loig.txt"):
     ax1.plot(df.index,df['Close'], label="Close Price",alpha=0.7)
     ax1.plot(df.index,df["MA_20"],LABEL="20 DAY MOVING AVERAGE",linestyle="--",alpha=0.8)
 
-    if "Cr"
+    if "Crash" in df.columns:
+        crash_points=df[df["Crash"]==1]
+        ax1.scatter(crash_points.index, crash_points['Close'],color="red",label="Crashes", marker="v")
+    if "Spike" in df.columns:
+        spike_points=df[df["Spike"]==1]
+        ax1.scatter(spike_points.index, spike_points['Close'],color="green",label="Spikes", marker="^")
+
+    ax1.set_title("Stock Prices + Crash Spike Events - With Accompnaying Moving Averages")
+    ax1.set_xlabel("Date")
+    ax1.set_ylabel("Price")
+    ax1.legend()
+    ax1.grid(True)
+
+    #bottom: confidence trend
+    ax2.plot(log_df["Timestamp"], log_df["Crash_Conf"], label="Crash Confidence", color='red', linewidth=2)
+    ax2.plot(log_df["Timestamp"], log_df["Spike_Conf"], label="Spike Confidence", color='green', linewidth=2)
+
+    ax2.set_title("Market Crash/Spike Confidence Trend Valuations Over Time")
+    ax2.set_xlabel("Date")
+    ax2.set_ylabel("condifence level")
+    ax2.set_ylim(0,1.05)
+    ax2.grid(True)
+    ax2.legend()
+
+    plt.tight_layout()
+    plt.show()
 
 
 if __name__ == '__main__':
