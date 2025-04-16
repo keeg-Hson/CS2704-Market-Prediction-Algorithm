@@ -398,9 +398,30 @@ if __name__ == '__main__':
     else:
         print("ERROR: Failed to fetch data")
 
+#10. PREDICTION LOG CLEANER
+def clean_predicton_log(log_file="prediction_log.txt"):
+    df=pd.read_csv(
+        log_file,
+        names=["Timestamp", 'Prediction', 'Crash_Conf', "Spike_Conf"],
+        parse_dates=["Timestamp"],
+        dtype={"Prediction": str, "Crash_Conf": str, "Spike_Conf": str}, #loads figures as "str" 
+        on_bad_lines='skip', 
+    )
+    
+    #   #Keep only rowsnwhere conf valuations are valid floats
+    df = df[pd.to_numeric(df["Crash_Conf"], errors='coerce').notnull()]
+    df = df[pd.to_numeric(df["Spike_Conf"], errors="coerce").notnull()]
+    df["Crash_Conf"]=df["Crash_Conf"].astype(float)
+    df["Spike_Conf"]=df["Spike_Conf"].astype(float)
+
+    #removal of duplicates with nearly iodentical timestamps
+    df = df.drop_duplicates(subset="Timestamp") 
+    df.to_csv(log_file, index=False, header=False)
+    print(f"[Log Cleaner] Cleaned log file {log_file} of duplicates and NaN values")
 
 
-#10: DAILY SCHEDULER FUNCTIONALITY
+
+#11: DAILY SCHEDULER FUNCTIONALITY
 #-WILL INCLUDE A DAILY SCHEDULER FUNCTIONALITY TO RUN THE PROGRAM ON A DAILY BASIS
 #--WILL INCLUDE A FUNCTIONALITY TO RUN THE PROGRAM ONCE, THEN SCHEDULE IT TO RUN DAILY
 #------DAILY SCHEDULER FUNCTION--------#
@@ -415,6 +436,8 @@ def daily_job():
         model=train_model(df, target='Event')
         live_predict(df)
         visualize_data(df, save_path=f'graphs/prediction_{pd.Timestamp.now().date()}.png') #, show=False (might be of use?)
+
+        clean_predicton_log()
         plot_confidence_trend() #plots conf trend
     else:
         print("ERROR: Failed to fetch data")
@@ -449,6 +472,7 @@ def run_once_then_schedule():
 
 if __name__ == '__main__':
     run_once_then_schedule()
+
 
 
 
