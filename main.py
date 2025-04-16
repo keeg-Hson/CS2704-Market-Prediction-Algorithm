@@ -473,6 +473,32 @@ def run_once_then_schedule():
         schedule.run_pending()
         time.sleep(60)
 
+#12. Combined Dashboard Functionality
+def show_combined_dashboard(df, log_file="prediction_loig.txt"):
+    #load pred log
+    try:
+        log_df=pd.read_csv(
+            log_file,
+            names=["Timestamp", 'Prediction', 'Crash_Conf', "Spike_Conf"],
+            parse_dates=["Timestamp"],
+        )
+        log_df=log_df.dropna(subset=["Crash_Conf", "Spike_Conf"])
+        log_df["Crash_Conf"]=log_df["Crash_Conf"].astype(float)
+        log_df["Spike_Conf"]=log_df["Spike_Conf"].astype(float)
+    except FileNotFoundError:
+        print(f"[Error]: Log file {log_file} not found!")
+        return
+    
+    #sest up fig with 2 subplots
+    fig, (ax1,ax2)=plt.subplots(2,1,figsize=(14,22)) #2r,1c
+
+    #top: stock prices
+    ax1.plot(df.index,df['Close'], label="Close Price",alpha=0.7)
+    ax1.plot(df.index,df["MA_20"],LABEL="20 DAY MOVING AVERAGE",linestyle="--",alpha=0.8)
+
+    if "Cr"
+
+
 if __name__ == '__main__':
     run_once_then_schedule()
 
