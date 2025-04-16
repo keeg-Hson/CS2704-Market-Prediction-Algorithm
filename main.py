@@ -491,7 +491,7 @@ def show_combined_dashboard(df, log_file="prediction_log.txt"):
         return
     
     #set up fig with 2 subplots
-    fig, (ax1,ax2)=plt.subplots(2,1,figsize=(14,22)) #2r,1c
+    fig, (ax1,ax2)=plt.subplots(2,1,figsize=(14,10), constrained_layout=True) #2r,1c
 
     #top: stock prices
     ax1.plot(df.index,df['Close'], label="Close Price",alpha=0.7)
@@ -521,7 +521,7 @@ def show_combined_dashboard(df, log_file="prediction_log.txt"):
     ax2.grid(True)
     ax2.legend()
     
-    plt.savefig("graphs/combined_dashboard.png")
+    plt.savefig(f'graphs/combined_dashboard_{pd.Timestamp.now().date()}.png')
     plt.tight_layout()
     plt.show()
 
