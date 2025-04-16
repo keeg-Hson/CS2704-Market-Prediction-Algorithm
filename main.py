@@ -465,6 +465,14 @@ def run_once_then_schedule():
     daily_job()
     schedule.every().day.at('18:00').do(daily_job)
     print('[Scheduler] Scheduled daily_job for 6:00pm')
+    print('Press Ctrl+C to exit the scheduler')
+
+    try:
+        while True:
+            schedule.run_pending()
+            time.sleep(1)
+    except KeyboardInterrupt:
+        print("Scehduler terminated by user")
 
     while True:
         schedule.run_pending()
